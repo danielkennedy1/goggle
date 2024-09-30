@@ -1,0 +1,1 @@
+A database is a system that stores large amounts of data in an organized way. Databases allow users to quickly access, modify, and manage data. They are used in many applications, from websites to banking systems, to keep track of information efficiently.

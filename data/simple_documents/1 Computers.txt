@@ -1,0 +1,1 @@
+Computers are electronic machines that process data and perform tasks according to instructions. They consist of hardware components like the CPU, memory, and storage, and they rely on software to operate efficiently. A basic program tells the computer what to do step by step.

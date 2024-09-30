@@ -1,0 +1,1 @@
+Software is a collection of programs that tell a computer what to do. It can be divided into two main types: system software and application software. System software includes the operating

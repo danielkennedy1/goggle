@@ -1,0 +1,1 @@
+Algorithms are step-by-step procedures used to solve problems. In computer science, an algorithm is a specific method that a program follows to achieve a particular task, such as sorting a list or finding the shortest path in a map. Efficiency is important in algorithm design.
