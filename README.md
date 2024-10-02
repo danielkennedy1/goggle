@@ -12,6 +12,11 @@ Document indexing, search, and keyword autocomplete
 ## DESIGN CONSIDERATIONS:
 - The project will be implemented in C++.
 - Use a trie for the autocomplete functionality.
+- The trie will also store an index associated with each unique word in the corpus. This references a position in our book index vectors that will store the frequency of that word in that text.
+- This approach will achieve constant time for autocomplete (on a letter-by-letter basis) and also constant time for word frequency retrieval.
+- The trie will be built during the indexing stage.
+- The search functionality will consist of retrieving the frequency of the word from our index and then using TF-IDF (Term Frequency-Inverse Document Frequency) to assign a value to its importance in the text, compensated by its frequency in the corpus as a whole.
+- This will allow us to rank each text by the frequency and importance with which the search term appears, and present the texts to the user in that order.
 
 ## Project Infrastructure
 - We have chosen CMake as our build system because it is fun and good.
