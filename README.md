@@ -16,3 +16,7 @@ Document indexing, search, and keyword autocomplete
 
 ## NOTES:
 - I reckon we should seperate the file ingress and index creation from each other so its easier to test.
+
+
+## AI Usage:
+- Generated example documents with ChatGPT
