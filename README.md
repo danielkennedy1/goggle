@@ -28,6 +28,7 @@ Document indexing, search, and keyword autocomplete
     - **[TEST]**: Adding test data
     - **[DOC]**: Documentation change
     - **[REFAC]**: Code refactor
+    - **[BUILD]**: Build system related change
 
 ## NOTES:
 - I reckon we should seperate the file ingress and index creation from each other so its easier to test.
@@ -35,3 +36,4 @@ Document indexing, search, and keyword autocomplete
 
 ## AI Usage:
 - Generated example documents with ChatGPT
+
