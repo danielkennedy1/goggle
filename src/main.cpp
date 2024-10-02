@@ -1,18 +1,70 @@
 #include <iostream>
 #include <string>
+#include <unordered_set>
+#include <unordered_map>
+#include <utility>
 #include "index/file/FileReader.hpp"
 
 int main() {
+    std::vector<std::string> paths = {
+      "C:\\Users\\danie\\Development\\ISE\\cs4437\\goggle\\data\\simple_documents\\1 Computers.txt",
+      "C:\\Users\\danie\\Development\\ISE\\cs4437\\goggle\\data\\simple_documents\\10 Databases.txt",
+      "C:\\Users\\danie\\Development\\ISE\\cs4437\\goggle\\data\\simple_documents\\2 Programming.txt",
+      "C:\\Users\\danie\\Development\\ISE\\cs4437\\goggle\\data\\simple_documents\\3 Networks.txt",
+      "C:\\Users\\danie\\Development\\ISE\\cs4437\\goggle\\data\\simple_documents\\4 Data.txt",
+      "C:\\Users\\danie\\Development\\ISE\\cs4437\\goggle\\data\\simple_documents\\5 Algorithims.txt",
+      "C:\\Users\\danie\\Development\\ISE\\cs4437\\goggle\\data\\simple_documents\\6 Internet.txt",
+      "C:\\Users\\danie\\Development\\ISE\\cs4437\\goggle\\data\\simple_documents\\7 Software.txt",
+      "C:\\Users\\danie\\Development\\ISE\\cs4437\\goggle\\data\\simple_documents\\8 Files.txt",
+      "C:\\Users\\danie\\Development\\ISE\\cs4437\\goggle\\data\\simple_documents\\9 Hardware.txt",
+    };
 
-    FileReader reader("C:\\Users\\danie\\Development\\ISE\\cs4437\\goggle\\data\\simple_documents\\1 Computers.txt");
-    std::cout << "FileReader created" << std::endl;
+    std::vector<std::vector<std::string>> documents;
 
-    std::vector<std::string> words = reader.read();
-
-    for (std::string word : words) {
-        std::cout << word << ", ";
+    for (std::string path : paths) {
+        std::cout << "Reading " << path << std::endl;
+        FileReader reader(path);
+        std::vector<std::string> content = reader.read();
+        documents.push_back(content);
     }
 
+    for (std::vector<std::string> content : documents) {
+      std::cout << "Words: " << content.size() << std::endl;
+    }
+
+    std::unordered_set<std::string> unique_words;
+
+    for (std::vector<std::string> content : documents) {
+        for (std::string word : content) {
+            unique_words.insert(word);
+        }
+    }
+
+    std::unordered_map<std::string, std::vector<int>> index;
+
+    for (std::string word : unique_words) {
+      index.insert(std::make_pair(word, std::vector<int>()));
+    }
+
+    for (int i = 0; i < documents.size(); i++) {
+      for (std::string word : unique_words) {
+        int count = 0;
+        for (std::string doc_word : documents[i]) {
+          if (word == doc_word) {
+            count++;
+          }
+        }
+        index[word].push_back(count);
+      }
+    }
+
+    for (std::pair<std::string, std::vector<int>> pair : index) {
+      std::cout << pair.first << ": ";
+      for (int i : pair.second) {
+        std::cout << i << " ";
+      }
+      std::cout << std::endl;
+    }
     
     return 0;
 }
