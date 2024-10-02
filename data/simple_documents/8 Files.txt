@@ -1,0 +1,1 @@
+A file is a collection of data stored on a computer. Files can contain text, images, videos, or other types of information. File systems help organize and manage files on storage devices like hard drives and USB sticks, allowing users to access their data easily.

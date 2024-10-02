@@ -1,0 +1,1 @@
+A network is a collection of computers that are connected to share resources like files, printers, or the internet. These connections can be wired or wireless, depending on the type of network. Common types of networks include local area networks (LANs) and wide area networks (WANs).

@@ -1,0 +1,1 @@
+Data refers to the information that computers process. Data can be numbers, text, images, or any other form of information. It is stored in databases and can be accessed or modified using different software tools. Handling data properly is essential for computer systems.

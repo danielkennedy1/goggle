@@ -1,0 +1,1 @@
+Hardware refers to the physical components of a computer system. Common hardware components include the central processing unit (CPU), memory, hard drive, and peripherals like keyboards and monitors. Without hardware, software would not be able to function.
