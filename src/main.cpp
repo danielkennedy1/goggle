@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "FileReader.hpp"
+#include "index/file/FileReader.hpp"
 
 int main() {
 
@@ -10,7 +10,7 @@ int main() {
     std::vector<std::string> words = reader.read();
 
     for (std::string word : words) {
-        std::cout << word << std::endl;
+        std::cout << word << ", ";
     }
 
     

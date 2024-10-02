@@ -10,6 +10,4 @@ add_executable(goggle
     src/index/file/FileReader.cpp
 )
 
-target_include_directories(goggle PRIVATE src/index/file)
-
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")

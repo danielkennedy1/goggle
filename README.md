@@ -37,3 +37,11 @@ Document indexing, search, and keyword autocomplete
 ## AI Usage:
 - Generated example documents with ChatGPT
 
+## Build instructions:
+- Go to build directory
+- Run `cmake ..`
+- Run `make` or `cmake --build .` depending on your system
+- Run executable that's produced (e.g. build/Debug/goggle.exe)
+
+## Run commands:
+- Daniel: `cmake --build .\build\ && .\build\Debug\goggle.exe`
