@@ -16,6 +16,12 @@ Document indexing, search, and keyword autocomplete
 - This approach will achieve constant time for autocomplete (on a letter-by-letter basis) and also constant time for word frequency retrieval.
 - The trie will be built during the indexing stage.
 - The search functionality will consist of retrieving the frequency of the word from our index and then using TF-IDF (Term Frequency-Inverse Document Frequency) to assign a value to its importance in the text, compensated by its frequency in the corpus as a whole.
+
+*TF-IDF Formula*: 
+```math
+w{_x}{_,}{_y}=tf{_x}{_,}{_y} × log({N \over df_x})
+```
+
 - This will allow us to rank each text by the frequency and importance with which the search term appears, and present the texts to the user in that order.
 
 ## Project Infrastructure
