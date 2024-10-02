@@ -19,10 +19,10 @@ Document indexing, search, and keyword autocomplete
 
 ## CI/CD
 - We are using a commit naming convention that uses a code in square brackets to indicate what kind of change the commit is making.
-    - [FEAT]: Feature Change
-    - [TEST]: Adding test data
-    - [DOC]: Documentation change
-    - [REFAC]: Code refactor
+    - **[FEAT]**: Feature Change
+    - **[TEST]**: Adding test data
+    - **[DOC]**: Documentation change
+    - **[REFAC]**: Code refactor
 
 ## NOTES:
 - I reckon we should seperate the file ingress and index creation from each other so its easier to test.
