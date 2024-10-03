@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "file/FileReader.hpp"
 
-TEST(HelloTest, BasicAssertions)
+TEST(FileReaderTests, TestWorks)
 {
   FileReader *reader = new FileReader("/Users/conor/ISE/Data Structures & Algorithms III/project/goggle/data/simple_documents/11 TestDoc.txt");
   std::vector<std::string> words = reader->read();
