@@ -2,3 +2,5 @@ build/
 .clangd
 Testing/
 .vscode/
+compile_commands.json
+.cache/
