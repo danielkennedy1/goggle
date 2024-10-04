@@ -1,5 +1,5 @@
 #include "FileReader.hpp"
-
+#include <iostream>
 FileReader::FileReader(const std::string& filename) : file(filename) {};
 
 FileReader::~FileReader() {
@@ -14,3 +14,4 @@ std::vector<std::string> FileReader::read() {
     }
     return words;
 }
+
