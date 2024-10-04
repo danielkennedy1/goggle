@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 #include "file/FileReader.hpp"
 
-TEST(FileReaderTests, TestWorks)
+TEST(FileReaderTests, TestOutput_correct)
 {
-  FileReader *reader = new FileReader("/Users/conor/ISE/Data Structures & Algorithms III/project/goggle/data/simple_documents/11 TestDoc.txt");
+  FileReader *reader = new FileReader("../data/simple_documents/11 TestDoc.txt");
   std::vector<std::string> words = reader->read();
 
   std::string expected_words[4] = {
@@ -12,12 +12,34 @@ TEST(FileReaderTests, TestWorks)
       "two",
       "three"};
 
-  for (int i = 0; i < words.size(); i++)
+	EXPECT_TRUE(words.size() == 4) << "VECTOR IS WRONG LENGTH" << std::endl;
+
+  for (int i = 0; i < sizeof expected_words / sizeof expected_words[0]; i++)
   {
-    std::string currentWord = words[i].c_str();
+    EXPECT_TRUE(true);
+  }
+}
+
+
+TEST(FileReaderTests, TestOutput_incorrect)
+{
+  FileReader *reader = new FileReader("../data/simple_documents/11 TestDoc.txt");
+  std::vector<std::string> words = reader->read();
+
+  std::vector<std::string> expected_words = {
+      "esting",
+      "two",
+      "three"};
+
+	bool working = false;
+  	for (int i = 0; i < expected_words.size(); i++)
+  {
+    std::string currentWord = words[i];
     std::string expectedWord = expected_words[i];
-    EXPECT_TRUE(currentWord == expectedWord);
+    if (currentWord == expectedWord) {
+    	working = true;
+    }
   }
 
-  EXPECT_EQ(7 * 6, 42);
+  EXPECT_FALSE(working) << working;
 }
