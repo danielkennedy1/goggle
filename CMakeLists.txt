@@ -34,7 +34,7 @@ enable_testing()
 
 add_executable(
   index_tests
-  src/index/_index_tests.cpp
+  tests/filereader_tests.cpp
 )
 
 target_sources(index_tests PRIVATE src/index/file/FileReader.cpp)
