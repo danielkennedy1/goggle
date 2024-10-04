@@ -2,9 +2,10 @@
 #include <string>
 #include <vector>
 
-class FileReader {
+class FileReader
+{
 public:
-    FileReader(const std::string& filename);
+    FileReader(const std::string &filename);
     ~FileReader();
     std::vector<std::string> read();
 
