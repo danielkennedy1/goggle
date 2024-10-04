@@ -16,4 +16,6 @@ int main() {
   assert(list->get(0) == 1);
   assert(list->get(1) == 4);
   assert(list->get(2) == 0);
+
+  std::cout << ROOT_DIR << std::endl;
 }
