@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "file/FileReader.hpp"
+#include "FileReader.hpp"
 
 TEST(FileReaderTests, TestOutput_correct)
 {
@@ -12,14 +12,13 @@ TEST(FileReaderTests, TestOutput_correct)
       "two",
       "three"};
 
-	EXPECT_TRUE(words.size() == 4) << "VECTOR IS WRONG LENGTH" << std::endl;
+  EXPECT_TRUE(words.size() == 4) << "VECTOR IS WRONG LENGTH" << std::endl;
 
   for (int i = 0; i < sizeof expected_words / sizeof expected_words[0]; i++)
   {
     EXPECT_TRUE(true);
   }
 }
-
 
 TEST(FileReaderTests, TestOutput_incorrect)
 {
@@ -31,13 +30,14 @@ TEST(FileReaderTests, TestOutput_incorrect)
       "two",
       "three"};
 
-	bool working = false;
-  	for (int i = 0; i < expected_words.size(); i++)
+  bool working = false;
+  for (int i = 0; i < expected_words.size(); i++)
   {
     std::string currentWord = words[i];
     std::string expectedWord = expected_words[i];
-    if (currentWord == expectedWord) {
-    	working = true;
+    if (currentWord == expectedWord)
+    {
+      working = true;
     }
   }
 
