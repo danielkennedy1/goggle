@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
-add_definitions(-DDATA_DIR=\"${CMAKE_SOURCE_DIR}/data/simple_documents\")
+add_definitions(-DTEST_DATA_DIR=\"${CMAKE_SOURCE_DIR}/data/simple_documents\")
 
 add_executable(goggle
     src/main.cpp
@@ -34,6 +34,7 @@ enable_testing()
 add_executable(
   test_index
   test/index/file/FileReader.cpp
+  test/index/file/DocumentSet.cpp
 )
 target_sources(test_index PRIVATE src/index/file/FileReader.cpp)
 target_link_libraries(

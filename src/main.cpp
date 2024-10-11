@@ -5,7 +5,7 @@
 #include <ostream>
 
 int main() {
-    DocumentSet* documents = new DocumentSet(DATA_DIR);
+    DocumentSet* documents = new DocumentSet(TEST_DATA_DIR);
 
     ArrayList<std::string>* document_paths = documents->getDocumentPaths();
 
