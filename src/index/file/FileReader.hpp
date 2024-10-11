@@ -1,13 +1,13 @@
 #include <fstream>
 #include <string>
-#include <vector>
+#include "ArrayList.h"
 
 class FileReader
 {
 public:
     FileReader(const std::string &filename);
     ~FileReader();
-    std::vector<std::string> read();
+    ArrayList<std::string> read();
 
 private:
     std::ifstream file;

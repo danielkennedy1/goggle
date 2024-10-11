@@ -41,12 +41,17 @@ public:
   };
   void clear() { length = 0; };
 
-  int size = 1;   // size of array
   int length = 0; // number of elements
 
   T *array;
 
+  T operator[] (int index) {
+      return get(index);
+  }
+
+
 private:
+  int size = 1;   // size of array
   void resize(int newSize) {
     T *newArray = new T[newSize](); // () 0s the elements
 

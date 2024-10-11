@@ -4,12 +4,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(Goggle VERSION 1.0)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
-add_definitions(-DROOT_DIR=\"${CMAKE_SOURCE_DIR}\")
+add_definitions(-DTEST_DATA_DIR=\"${CMAKE_SOURCE_DIR}/data/simple_documents\")
 
 add_executable(goggle
     src/main.cpp
@@ -34,6 +34,7 @@ enable_testing()
 add_executable(
   test_index
   test/index/file/FileReader.cpp
+  test/index/file/DocumentSet.cpp
 )
 target_sources(test_index PRIVATE src/index/file/FileReader.cpp)
 target_link_libraries(
