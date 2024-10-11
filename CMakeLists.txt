@@ -4,12 +4,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(Goggle VERSION 1.0)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
-add_definitions(-DROOT_DIR=\"${CMAKE_SOURCE_DIR}\")
+add_definitions(-DDATA_DIR=\"${CMAKE_SOURCE_DIR}/data/simple_documents\")
 
 add_executable(goggle
     src/main.cpp
