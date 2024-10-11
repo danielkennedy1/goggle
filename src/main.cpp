@@ -1,21 +1,23 @@
-#include "ArrayList.h"
-#include <cassert>
+#include "index/file/DocumentSet.hpp"
+#include "index/file/FileReader.hpp"
+#include "core/ArrayList.h"
 #include <iostream>
+#include <ostream>
 
 int main() {
-  ArrayList<int>* list = new ArrayList<int>();
+    DocumentSet* documents = new DocumentSet(DATA_DIR);
 
-  list->append(1);
-  list->append(2);
-  list->append(3);
+    ArrayList<std::string>* document_paths = documents->getDocumentPaths();
 
-  list->insert(4, 1);
-  
-  list->remove(2);
+    for(int i = 0; i < document_paths->length; i++) {
+        std::cout << "Reading: " << document_paths->get(i) << std::endl;
+        FileReader reader = FileReader(document_paths->get(i));
+        ArrayList<std::string> words = reader.read();
+        for(int i = 0; i < words.length; i++) {
+            std::cout << words.get(i) << " ";
+        }
+        std::cout << std::endl;
+    }
 
-  assert(list->get(0) == 1);
-  assert(list->get(1) == 4);
-  assert(list->get(2) == 0);
-
-  std::cout << ROOT_DIR << std::endl;
+    return 0;
 }
