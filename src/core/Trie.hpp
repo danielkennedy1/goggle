@@ -6,16 +6,17 @@
 class TrieNode
 {
 public:
-  static int numOfWords;
   int wordIndex;
+  int* numOfWords;
 
-  TrieNode(char value)
+  TrieNode(char value, int* numOfWords)
   {
     nodeValue = value;
     wordIndex = -1;
+    this->numOfWords = numOfWords;
   };
 
-  TrieNode()
+  TrieNode(int* numOfWords)
   {
     for (int i = 0; i < 26; i++)
     {
@@ -23,12 +24,15 @@ public:
     };
     nodeValue = '\0';
     wordIndex = -1;
+    this->numOfWords = numOfWords;
+  }
+
+  ~TrieNode() {
   }
 
   int insert(std::string word)
   {
     TrieNode *currentNode = this;
-    bool newWord = false;
     for (int i = 0; i < word.size(); i++)
     {
       int index = word[i] - 'a';
@@ -38,14 +42,13 @@ public:
       }
       else
       {
-        newWord = true;
-        currentNode->children[index] = new TrieNode(word[i]);
+        currentNode->children[index] = new TrieNode(word[i], numOfWords);
         currentNode = currentNode->children[index];
       }
     }
-    if (newWord) {
-      currentNode->wordIndex = numOfWords;
-      currentNode->numOfWords++;
+    if (currentNode->wordIndex == -1) {
+      currentNode->wordIndex = *numOfWords;
+      *numOfWords = (int)*numOfWords + 1;
     }
     return currentNode->wordIndex;
   };
