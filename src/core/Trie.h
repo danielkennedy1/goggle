@@ -1,6 +1,7 @@
 #ifndef TRIE_H
 #define TRIE_H
 #include <string>
+#include <iostream>
 
 class TrieNode
 {
@@ -53,7 +54,6 @@ public:
     }
   }
 
-  // ArrayList<std::string> search(std::string word) {
   void autocomplete(std::string word)
   {
     TrieNode *searchOrigin = this;
@@ -68,7 +68,6 @@ public:
         }
       }
     }
-    // std::cout << searchOrigin->nodeValue << "TESTING 123" << std::endl;
     for (int i = 0; i < 26; i++)
     {
       if (searchOrigin->children[i])
