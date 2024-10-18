@@ -14,6 +14,7 @@ add_definitions(-DTEST_DATA_DIR=\"${CMAKE_SOURCE_DIR}/data/simple_documents\")
 add_executable(goggle
     src/main.cpp
     src/index/file/FileReader.cpp
+    src/core/Trie.hpp
 )
 
 include_directories(
@@ -45,8 +46,10 @@ target_link_libraries(
 add_executable(
   test_core
   test/core/ArrayList.cpp
+  test/core/Trie.cpp
 )
 target_sources(test_core PRIVATE src/core/ArrayList.h)
+target_sources(test_core PRIVATE src/core/Trie.hpp)
 target_link_libraries(
   test_core
   GTest::gtest_main
