@@ -7,7 +7,7 @@ class FileReader
 public:
     FileReader(const std::string &filename);
     ~FileReader();
-    ArrayList<std::string> read();
+    ArrayList<std::string>* read();
 
 private:
     std::ifstream file;

@@ -1,3 +1,5 @@
+#include <iostream>
+
 template <typename K, typename V> struct MapNode {
     K key;
     V value;
@@ -24,6 +26,7 @@ public:
     double loadFactorTolerance = 0.5f;
 
     void rehash(int newSize) {
+        std::cout << "rehash" << std::endl;
         MapNode<K, V> **oldTable = table;
         int oldSize = size;
         size = newSize;
