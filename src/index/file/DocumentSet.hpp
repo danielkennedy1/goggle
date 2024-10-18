@@ -9,6 +9,7 @@ public:
   ArrayList<std::string>* getDocumentPaths() {
     ArrayList<std::string>* result = new ArrayList<std::string>();
 
+
     for (const auto &entry :
          std::filesystem::recursive_directory_iterator(directory)) {
 
