@@ -1,8 +1,7 @@
-#include "ArrayList.h"
-
 #include <filesystem>
 #include <regex>
 #include <string>
+#include "ArrayList.h"
 
 class DocumentSet {
 public:

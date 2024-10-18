@@ -6,9 +6,13 @@
 class TrieNode
 {
 public:
+  static int numOfWords;
+  int wordIndex;
+
   TrieNode(char value)
   {
     nodeValue = value;
+    wordIndex = -1;
   };
 
   TrieNode()
@@ -18,13 +22,13 @@ public:
       children[i] = nullptr;
     };
     nodeValue = '\0';
-    wordIndex = numOfNodes;
-    numOfNodes += 1;
+    wordIndex = -1;
   }
 
-  void insert(std::string word)
+  int insert(std::string word)
   {
     TrieNode *currentNode = this;
+    bool newWord = false;
     for (int i = 0; i < word.size(); i++)
     {
       int index = word[i] - 'a';
@@ -34,16 +38,21 @@ public:
       }
       else
       {
+        newWord = true;
         currentNode->children[index] = new TrieNode(word[i]);
         currentNode = currentNode->children[index];
       }
     }
-    currentNode->completeWord = true;
+    if (newWord) {
+      currentNode->wordIndex = numOfWords;
+      currentNode->numOfWords++;
+    }
+    return currentNode->wordIndex;
   };
 
   void recursiveAutocomplete(TrieNode *currentNode, std::string currentWord)
   {
-    if (currentNode->completeWord)
+    if (currentNode->wordIndex != -1)
     {
       std::cout << currentWord + currentNode->nodeValue << std::endl;
     }
@@ -84,16 +93,16 @@ public:
     TrieNode *currentNode = this;
     for (int i = 0; i < word.size(); i++)
     {
-      for (int j = 0; j < 26; j++)
+	    for (int j = 0; j < 26; j++)
       {
         if (currentNode->children[j] && currentNode->children[j]->nodeValue == word[i])
-        {
-          currentNode = currentNode->children[j];
-          break;
-        }
+          {
+	          currentNode = currentNode->children[j];
+            break;
+          }
       }
     }
-    if (currentNode->completeWord)
+    if (currentNode->wordIndex != -1)
     {
       return currentNode;
     }
@@ -101,12 +110,8 @@ public:
   }
 
 private:
-  static int numOfNodes;
-
   TrieNode *children[26];
   char nodeValue;
-  int wordIndex;
-  bool completeWord;
 };
 
 #endif // TRIE_H

@@ -14,13 +14,13 @@ add_definitions(-DTEST_DATA_DIR=\"${CMAKE_SOURCE_DIR}/data/simple_documents\")
 add_executable(goggle
     src/main.cpp
     src/index/file/FileReader.cpp
-    src/core/Trie.hpp
 )
 
 include_directories(
   src/
-  src/index/file/
   src/core/
+  src/index/
+  src/index/file/
 )
 
 
@@ -36,8 +36,14 @@ add_executable(
   test_index
   test/index/file/FileReader.cpp
   test/index/file/DocumentSet.cpp
+  test/index/FrequencyCounter.cpp
 )
-target_sources(test_index PRIVATE src/index/file/FileReader.cpp)
+
+target_sources(test_index PRIVATE 
+  src/index/file/FileReader.cpp
+  src/index/FrequencyCounter.hpp
+)
+
 target_link_libraries(
   test_index
   GTest::gtest_main

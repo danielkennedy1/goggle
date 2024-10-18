@@ -10,6 +10,9 @@ ArrayList<std::string> FileReader::read() {
     ArrayList<std::string> words;
     std::string word;
     while (file >> word) {
+        for (auto& x : word) { 
+            x = tolower(x); 
+        } 
         words.append(word);
     }
     return words;
