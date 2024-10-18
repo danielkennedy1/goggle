@@ -1,3 +1,4 @@
+#include <iostream>
 #ifndef ARRAYLIST_H
 #define ARRAYLIST_H
 
@@ -33,6 +34,21 @@ public:
 
     length++;
   };
+
+  void update(int index, T element) {
+    try
+    {
+      if (index >= length) {
+        throw (index);
+      }
+      array[index] = element;
+    }
+    catch(int index)
+    {
+      std::cerr << "INDEX " << index << "IS OUT OF BOUNDS FOR ARRAY OF SIZE " << length << '\n';
+    }    
+  };
+
   T get(int index) { return array[index]; };
   void remove(int index) {
     length--;

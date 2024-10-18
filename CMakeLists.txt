@@ -18,8 +18,9 @@ add_executable(goggle
 
 include_directories(
   src/
-  src/index/file/
   src/core/
+  src/index/
+  src/index/file/
 )
 
 
@@ -35,8 +36,14 @@ add_executable(
   test_index
   test/index/file/FileReader.cpp
   test/index/file/DocumentSet.cpp
+  test/index/FrequencyCounter.cpp
 )
-target_sources(test_index PRIVATE src/index/file/FileReader.cpp)
+
+target_sources(test_index PRIVATE 
+  src/index/file/FileReader.cpp
+  src/index/FrequencyCounter.hpp
+)
+
 target_link_libraries(
   test_index
   GTest::gtest_main
@@ -45,8 +52,10 @@ target_link_libraries(
 add_executable(
   test_core
   test/core/ArrayList.cpp
+  test/core/Trie.cpp
 )
 target_sources(test_core PRIVATE src/core/ArrayList.h)
+target_sources(test_core PRIVATE src/core/Trie.hpp)
 target_link_libraries(
   test_core
   GTest::gtest_main
