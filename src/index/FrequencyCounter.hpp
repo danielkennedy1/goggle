@@ -1,3 +1,5 @@
+#ifndef FREQUENCYCOUNTER_H
+#define FREQUENCYCOUNTER_H
 #include <string>
 #include <utility>
 #include <iostream>
@@ -69,3 +71,4 @@ private:
     int* nextFreeIndex = new int;
     int* nextFreeIndexTitles = new int;
 };
+#endif

@@ -24,6 +24,7 @@ include_directories(
   src/core/
   src/index/
   src/index/file/
+  src/search/
 )
 
 
@@ -34,6 +35,21 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 enable_testing()
+
+add_executable(
+  test_search
+  test/search/Parser.cpp
+)
+
+target_sources(test_search PRIVATE 
+  src/index/file/FileReader.cpp
+  src/search/Parser.hpp
+)
+
+target_link_libraries(
+  test_search
+  GTest::gtest_main
+)
 
 add_executable(
   test_index
@@ -67,3 +83,4 @@ target_link_libraries(
 include(GoogleTest)
 gtest_discover_tests(test_index)
 gtest_discover_tests(test_core)
+gtest_discover_tests(test_search)

@@ -1,27 +1,36 @@
+#ifndef INDEX_H
+#define INDEX_H
 #include "ArrayList.h"
 #include "DocumentSet.hpp"
-#include "FileReader.hpp"
 #include "HashMap.hpp"
-#include <string>
-#include <strings.h>
 #include "FrequencyCounter.hpp"
+#include <string>
 
-class Index {
+class Indexer {
 public:
-    Index(std::string directory) {
-        counters = new ArrayList<FrequencyCounter*>;
+    Indexer(std::string directory) {
         DocumentSet* documents = new DocumentSet(directory);
         ArrayList<std::string>* document_paths = documents->getDocumentPaths();
+        counter = new FrequencyCounter(document_paths->length);
+
+        std::cout << "Indexing documents..." << std::endl;
 
         for (int i = 0; i < document_paths->length; i++) {
+            std::cout << "Indexing: " << document_paths->get(i) << std::endl;
             FileReader reader = FileReader(document_paths->get(i));
             ArrayList<std::string>* words = reader.read();
 
-            FrequencyCounter* counter = new FrequencyCounter(words);
+            counter->addDocument(i, words, document_paths->get(i));
+            counter->indexDocument(i);
+        }
 
-            counters->append(counter);
+        std::cout << "Documents indexed: " << std::endl;
+
+        for (int i = 0; i < counter->numOfDocuments; i++) {
+            std::cout << i << ": " << counter->documents[i].name << std::endl;
         }
     }
 
-    ArrayList<FrequencyCounter*>* counters = nullptr;
+    FrequencyCounter* counter = nullptr;
 };
+#endif
