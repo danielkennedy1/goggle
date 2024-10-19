@@ -49,5 +49,9 @@ w{_x}{_,}{_y}=tf{_x}{_,}{_y} × log({N \over df_x})
 - Run `make` or `cmake --build .` depending on your system
 - Run executable that's produced (e.g. build/Debug/goggle.exe)
 
+## Document procurement
+`cd data`
+`source gutenberg.sh`
+
 ## Run commands:
 - Daniel: `cmake --build .\build\ && .\build\Debug\goggle.exe`
