@@ -6,3 +6,4 @@ Testing/
 compile_commands.json
 .cache/
 data/serialized_data/
+data/gutenberg/
