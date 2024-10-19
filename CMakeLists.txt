@@ -11,6 +11,7 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 add_definitions(-DTEST_DATA_DIR=\"${CMAKE_SOURCE_DIR}/data/simple_documents\")
+add_definitions(-DSERIALIZED_DATA_DIR=\"${CMAKE_SOURCE_DIR}/data/serialized_data\")
 
 add_executable(goggle
     src/main.cpp

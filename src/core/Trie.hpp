@@ -2,6 +2,7 @@
 #define TRIE_H
 #include <string>
 #include <iostream>
+#include <fstream>
 #include "ArrayList.h"
 
 class TrieNode
@@ -115,6 +116,7 @@ public:
     TrieNode *currentNode = this;
     for (int i = 0; i < word.size(); i++)
     {
+      std::cout << currentNode->nodeValue << std::endl;
       int index = word[i] - 'a';
       if(index < 0 || index > 25) {
         index = 26;
@@ -131,6 +133,39 @@ public:
     }
     return nullptr;
   }
+
+  void serialize(const std::string& filename)
+    {
+        std::ofstream file(filename, std::ios::binary);
+        if (!file.is_open()) {
+            std::cerr
+                << "Error: Failed to open file for writing."
+                << std::endl;
+            return;
+        }
+        file.write(reinterpret_cast<const char*>(this),
+                   sizeof(*this));
+        file.close();
+        std::cout << "Object serialized successfully." << std::endl;
+    }
+
+  static TrieNode deserialize(const std::string& filename)
+    {
+        TrieNode node = TrieNode(0);
+        std::ifstream file(filename, std::ios::binary);
+        if (!file.is_open()) {
+            std::cerr
+                << "Error: Failed to open file for reading."
+                << std::endl;
+            return NULL;
+        }
+        file.read(reinterpret_cast<char*>(&node),
+                  sizeof(node));
+        file.close();
+        std::cout << "Object deserialized successfully." << std::endl;
+        return node;
+    }
+
 
   char nodeValue;
 private:
