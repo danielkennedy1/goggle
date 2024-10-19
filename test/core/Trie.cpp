@@ -1,11 +1,13 @@
 #include <gtest/gtest.h>
 #include "Trie.hpp"
 
-int TrieNode::numOfWords = 0;
+// int TrieNode::numOfWords = 0;
 
 TEST(TrieTests, TestInsertionAndCheck)
 {
-    TrieNode *trie = new TrieNode();
+    int numOfWords = 0;
+
+    TrieNode *trie = new TrieNode(&numOfWords);
 
     trie->insert("testing");
     trie->insert("testy");
