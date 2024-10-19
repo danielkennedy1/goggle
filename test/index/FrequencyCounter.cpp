@@ -2,6 +2,7 @@
 #include <iostream>
 #include "FrequencyCounter.hpp"
 #include "FileReader.hpp"
+#include "DocumentSet.hpp"
 
 TEST(FrequencyCounterTests, TestFrequencyCounterCanCountFrequency) {    
     std::string s(TEST_DATA_DIR);
@@ -9,24 +10,42 @@ TEST(FrequencyCounterTests, TestFrequencyCounterCanCountFrequency) {
     
     ArrayList<std::string> words = reader->read();
 
-    int nextFreeIndex = 0;
+    FrequencyCounter counter = FrequencyCounter(1); 
+
+    counter.addDocument(0, &words, DocumentSet::parseDocNameFromPath(s + "/11 TestDoc.txt"));
+
+    counter.indexDocument(0);
+
+    ArrayList<int> documentFrequencies = counter.getFreqTable()[0];
+
+    TrieNode* vocabTrie = counter.getVocabTrie();
+    TrieNode* searchTermNode = vocabTrie->check("testing");
+    TrieNode* incorrectSearchTermNode = vocabTrie->check("dog");
+
+    int freqOfWord = documentFrequencies.get(searchTermNode->wordIndex);
+
+    ASSERT_TRUE(incorrectSearchTermNode == nullptr);
+    ASSERT_EQ(freqOfWord, 1);
+}
+
+
+TEST(FrequencyCounterTests, TestFrequencyCounterTitleTrie) {    
+    std::string s(TEST_DATA_DIR);
+    FileReader *reader = new FileReader(s + "/11 TestDoc.txt");
+    
+    ArrayList<std::string> words = reader->read();
 
     FrequencyCounter counter = FrequencyCounter(1); 
 
-    // counter.addDocument(0, words);
+    counter.addDocument(0, &words, DocumentSet::parseDocNameFromPath(s + "/11 TestDoc.txt"));
 
-    // counter.indexDocument(0);
+    counter.indexDocument(0);
 
-    // ArrayList<int> documentFrequencies = counter.getFreqTable()[0];
+    TrieNode* titleTrie = counter.getTitleTrie();
 
-    // TrieNode* trie = counter.getTrie();
-    // TrieNode* searchTermNode = trie->check("testing");
-    // TrieNode* incorrectSearchTermNode = trie->check("dog");
-    // std::cout << "GOT TO HERE" << std::endl;
-    // std::cout << documentFrequencies.get(searchTermNode->wordIndex) << std::endl;
+    // std::cout << "NUM OF WORDS: " << titleTrie->check(DocumentSet::parseDocNameFromPath(s + "/11 TestDoc.txt")) << std::endl;
 
-    // int freqOfWord = documentFrequencies.get(searchTermNode->wordIndex);
+    // ArrayList<std::string> titles = titleTrie->autocomplete("");
 
-    // ASSERT_TRUE(incorrectSearchTermNode == nullptr);
-    // ASSERT_EQ(freqOfWord, 1);
+    ASSERT_TRUE(titleTrie->check("testdoc"));
 }

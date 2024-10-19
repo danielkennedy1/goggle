@@ -17,7 +17,6 @@ ArrayList<std::string> FileReader::read() {
             if ((int)word[i] <= 90) {
                 word[i] += 32;
             }
-            word[i] = tolower(word[i]);
         } 
         words.append(word);
     }
