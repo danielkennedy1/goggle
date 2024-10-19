@@ -6,8 +6,8 @@ FileReader::~FileReader() {
     file.close();
 }
 
-ArrayList<std::string> FileReader::read() {
-    ArrayList<std::string> words;
+ArrayList<std::string>* FileReader::read() {
+    ArrayList<std::string>* words = new ArrayList<std::string>();
     std::string word;
     while (file >> word) {
         for (int i = 0; i < word.size(); i++) {
@@ -18,7 +18,7 @@ ArrayList<std::string> FileReader::read() {
                 word[i] += 32;
             }
         } 
-        words.append(word);
+        words->append(word);
     }
     return words;
 }

@@ -7,7 +7,7 @@ TEST(FrequencyCounterTests, TestFrequencyCounterCanCountFrequency) {
     std::string s(TEST_DATA_DIR);
     FileReader *reader = new FileReader(s + "/11 TestDoc.txt");
     
-    ArrayList<std::string> words = reader->read();
+    ArrayList<std::string>* words = reader->read();
 
     FrequencyCounter counter = FrequencyCounter(1); 
 

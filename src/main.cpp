@@ -74,8 +74,3 @@ int main() {
         }
         std::cout << std::endl;
     }
-
-    TrieNode* titleTrie = counter.getTitleTrie();
-
-    return 0;
-}
