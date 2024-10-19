@@ -10,12 +10,6 @@ public:
   int wordIndex;
   int* numOfWords;
 
-  TrieNode(char value)
-  {
-    nodeValue = value;
-    wordIndex = -1;
-  };
-
   TrieNode(char value, int* numOfWords)
   {
     nodeValue = value;
@@ -23,15 +17,6 @@ public:
     this->numOfWords = numOfWords;
   };
 
-  TrieNode()
-  {
-    for (int i = 0; i < 27; i++)
-    {
-      children[i] = nullptr;
-    };
-    nodeValue = '\0';
-    wordIndex = -1;
-  }
 
   TrieNode(int* numOfWords)
   {
@@ -62,17 +47,9 @@ public:
       }
       else
       {
-        if (numOfWords == nullptr) {
-          currentNode->children[index] = new TrieNode(word[i]);
-        } else {
-          currentNode->children[index] = new TrieNode(word[i], numOfWords);
-        }
+        currentNode->children[index] = new TrieNode(word[i], numOfWords);
         currentNode = currentNode->children[index];
       }
-    }
-    if(numOfWords == nullptr) {
-      currentNode->wordIndex = -2;
-      return -1;
     }
     if (currentNode->wordIndex == -1) {
       currentNode->wordIndex = *numOfWords;

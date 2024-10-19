@@ -3,6 +3,8 @@
 #include <iostream>
 #include "core/Trie.hpp"
 #include "ArrayList.h"
+#include "DocumentSet.hpp"
+#include "StringUtils.hpp"
 
 struct book {
     public:
@@ -15,11 +17,15 @@ struct book {
 class FrequencyCounter
 {
 public:
+    int numOfDocuments;
+    book* documents;
 
     FrequencyCounter(int numOfDocs) {
+        numOfDocuments = numOfDocs;
         *nextFreeIndex = 0;
+        *nextFreeIndexTitles = 0;
         vocabularyTrie = new TrieNode(nextFreeIndex);
-        titleTrie = new TrieNode();
+        titleTrie = new TrieNode(nextFreeIndexTitles);
         documents = new book[numOfDocs];
         frequencyTable = new ArrayList<int>[numOfDocs];
     }
@@ -33,14 +39,13 @@ public:
     }
 
     void addDocument(int docNum, ArrayList<std::string>* words, std::string name) {
-        documents[docNum].name = name;
+        documents[docNum].name = StringUtils::parseDocNameFromPath(name);
         documents[docNum].contents = words;
     }
 
 
     void indexDocument(int docNum) {
-        std::cout << documents[docNum].name << std::endl;
-        titleTrie->insert(documents[docNum].name);
+        titleTrie->insert(StringUtils::removeInvalidChars(StringUtils::parseDocNameFromPath(documents[docNum].name)));
         for(int i = 0; i < documents[docNum].contents->length; i++) {
             int index = vocabularyTrie->insert(documents[docNum].contents->get(i));
             while (index >= frequencyTable[docNum].length) {
@@ -61,6 +66,6 @@ private:
     TrieNode* vocabularyTrie;
     TrieNode* titleTrie;
     ArrayList<int>* frequencyTable;
-    book* documents;
     int* nextFreeIndex = new int;
+    int* nextFreeIndexTitles = new int;
 };

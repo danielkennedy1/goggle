@@ -2,7 +2,6 @@
 #include <iostream>
 #include "FrequencyCounter.hpp"
 #include "FileReader.hpp"
-#include "DocumentSet.hpp"
 
 TEST(FrequencyCounterTests, TestFrequencyCounterCanCountFrequency) {    
     std::string s(TEST_DATA_DIR);
@@ -12,7 +11,7 @@ TEST(FrequencyCounterTests, TestFrequencyCounterCanCountFrequency) {
 
     FrequencyCounter counter = FrequencyCounter(1); 
 
-    counter.addDocument(0, &words, DocumentSet::parseDocNameFromPath(s + "/11 TestDoc.txt"));
+    counter.addDocument(0, &words, StringUtils::parseDocNameFromPath(s + "/11 TestDoc.txt"));
 
     counter.indexDocument(0);
 
@@ -37,13 +36,13 @@ TEST(FrequencyCounterTests, TestFrequencyCounterTitleTrie) {
 
     FrequencyCounter counter = FrequencyCounter(1); 
 
-    counter.addDocument(0, &words, DocumentSet::parseDocNameFromPath(s + "/11 TestDoc.txt"));
+    counter.addDocument(0, &words, StringUtils::parseDocNameFromPath(s + "/11 TestDoc.txt"));
 
     counter.indexDocument(0);
 
     TrieNode* titleTrie = counter.getTitleTrie();
 
-    // std::cout << "NUM OF WORDS: " << titleTrie->check(DocumentSet::parseDocNameFromPath(s + "/11 TestDoc.txt")) << std::endl;
+    // std::cout << "NUM OF WORDS: " << titleTrie->check(StringUtils::parseDocNameFromPath(s + "/11 TestDoc.txt")) << std::endl;
 
     // ArrayList<std::string> titles = titleTrie->autocomplete("");
 
