@@ -1,3 +1,5 @@
+#ifndef DOCUMENTSET_H
+#define DOCUMENTSET_H
 #include <filesystem>
 #include <regex>
 #include <string>
@@ -28,3 +30,6 @@ private:
   std::regex regex_pattern = std::regex(R"(.*\.txt)");
   std::string directory;
 };
+
+
+#endif

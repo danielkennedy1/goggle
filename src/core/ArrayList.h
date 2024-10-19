@@ -1,9 +1,12 @@
-#include <iostream>
 #ifndef ARRAYLIST_H
 #define ARRAYLIST_H
+#include <iostream>
+#include <fstream>
 
 template <typename T> class ArrayList {
 public:
+    int size = 1; // size of array
+
     ArrayList() {
         array = new T[size];
     };
@@ -65,8 +68,39 @@ public:
 
     T operator[](int index) { return get(index); }
 
+    void serialize(const std::string& filename)
+    {
+        std::ofstream file(filename, std::ios::binary);
+        if (!file.is_open()) {
+            std::cerr
+                << "Error: Failed to open file for writing."
+                << std::endl;
+            return;
+        }
+        file.write(reinterpret_cast<const char*>(this),
+                   sizeof(*this));
+        file.close();
+        std::cout << "Object serialized successfully." << std::endl;
+    }
+
+    static ArrayList<T> deserialize(const std::string& filename)
+    {
+        ArrayList<T> obj;
+        std::ifstream file(filename, std::ios::binary);
+        if (!file.is_open()) {
+            std::cerr
+                << "Error: Failed to open file for reading."
+                << std::endl;
+            return obj;
+        }
+        file.read(reinterpret_cast<char*>(&obj),
+                    sizeof(obj));
+        file.close();
+        std::cout << "Object deserialized successfully." << std::endl;
+        return obj;
+    }
+
 private:
-    int size = 1; // size of array
     void resize(int newSize) {
         T *newArray = new T[newSize](); // () 0s the elements
 
