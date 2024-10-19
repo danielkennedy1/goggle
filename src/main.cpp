@@ -7,10 +7,9 @@
 
 int main() {
     std::cout << "Welcome to Goggle!\nPlease enter the path to the directory of books (in .txt format) that you would like to index." <<std::endl;
-    std::string documentsPath = "/home/conorc/ISE/goggle/data/simple_documents";
+    std::string documentsPath = TEST_DATA_DIR;
     // std::string documentsPath;
     // std::cin >> documentsPath;
-    
     
     DocumentSet* documents = new DocumentSet(documentsPath);
     ArrayList<std::string>* document_paths = documents->getDocumentPaths();
@@ -22,8 +21,8 @@ int main() {
     for(int i = 0; i < document_paths->length; i++) {
         std::cout << "Indexing: " << document_paths->get(i) << std::endl;
         FileReader reader = FileReader(document_paths->get(i));
-        ArrayList<std::string> words = reader.read();
-        counter.addDocument(i, &words, document_paths->get(i));
+        ArrayList<std::string>* words = reader.read();
+        counter.addDocument(i, words, document_paths->get(i));
         counter.indexDocument(i);
     }
 
@@ -74,3 +73,4 @@ int main() {
         }
         std::cout << std::endl;
     }
+}
