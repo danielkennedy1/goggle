@@ -10,17 +10,25 @@ class Indexer {
 public:
     Indexer(std::string directory) {
         DocumentSet* documents = new DocumentSet(directory);
-        ArrayList<std::string>* document_paths = documents->getDocumentPaths();
-        counter = new FrequencyCounter(document_paths->length);
+        documentPaths = documents->getDocumentPaths();
+        numOfDocuments = documentPaths->length;
+        counter = new FrequencyCounter(numOfDocuments);       
+    }
 
+    ~Indexer() {
+        delete documentPaths;
+        delete counter;
+    }
+
+    void index() {
         std::cout << "Indexing documents..." << std::endl;
 
-        for (int i = 0; i < document_paths->length; i++) {
-            std::cout << "Indexing: " << document_paths->get(i) << std::endl;
-            FileReader reader = FileReader(document_paths->get(i));
+        for (int i = 0; i < numOfDocuments; i++) {
+            std::cout << "Indexing: " << documentPaths->get(i) << std::endl;
+            FileReader reader = FileReader(documentPaths->get(i));
             ArrayList<std::string>* words = reader.read();
 
-            counter->addDocument(i, words, document_paths->get(i));
+            counter->addDocument(i, words, documentPaths->get(i));
             counter->indexDocument(i);
         }
 
@@ -31,6 +39,25 @@ public:
         }
     }
 
+    TrieNode* getVocabTrie() {
+        return counter->getVocabTrie();
+    }
+
+    ArrayList<int>* getFrequencyTable() {
+        return counter->getFreqTable();
+    }
+
+    int getNumOfDocuments() {
+        return numOfDocuments;
+    }
+
+    book* getDocuments() {
+        return counter->documents;
+    }
+
+private:
     FrequencyCounter* counter = nullptr;
+    ArrayList<std::string>* documentPaths;
+    int numOfDocuments;
 };
 #endif

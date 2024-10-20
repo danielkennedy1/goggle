@@ -11,8 +11,9 @@
 struct book {
     public:
     book() : name(""), contents(nullptr) {};
-    book(std::string name, ArrayList<std::string>* contents) : name(name), contents(contents) {};
+    book(std::string name, ArrayList<std::string>* contents) : name(name), path(path), contents(contents) {};
     std::string name;
+    std::string path;
     ArrayList<std::string>* contents;
 };
 
@@ -40,8 +41,9 @@ public:
         delete nextFreeIndex;
     }
 
-    void addDocument(int docNum, ArrayList<std::string>* words, std::string name) {
-        documents[docNum].name = StringUtils::parseDocNameFromPath(name);
+    void addDocument(int docNum, ArrayList<std::string>* words, std::string path) {
+        documents[docNum].path = path;
+        documents[docNum].name = StringUtils::parseDocNameFromPath(path);
         documents[docNum].contents = words;
     }
 
