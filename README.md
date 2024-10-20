@@ -35,6 +35,7 @@ w{_x}{_,}{_y}=tf{_x}{_,}{_y} × log({N \over df_x})
     - **[DOC]**: Documentation change
     - **[REFAC]**: Code refactor
     - **[BUILD]**: Build system related change
+    - **[BUG]**: Bug fix
 
 ## NOTES:
 - I reckon we should seperate the file ingress and index creation from each other so its easier to test.
