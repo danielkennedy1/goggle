@@ -1,14 +1,18 @@
-#include <iostream>
-#include <string>
-#include <ostream>
+#include "core/ArrayList.h"
+#include "index/FrequencyCounter.hpp"
 #include "index/file/FileReader.hpp"
+#include "MaxHeap.hpp"
+#include <iostream>
+#include <ostream>
 #include "core/ArrayList.h"
 #include "Parser.hpp"
 #include "Index.hpp"
 
 int main() {
-    std::cout << "Welcome to Goggle!\nPlease enter the path to the directory of books (in .txt format) that you would like to index." <<std::endl;
-    std::string documentsPath = TEST_DATA_DIR;
+    std::cout << "Welcome to Goggle!\nPlease enter the path to the directory "
+                 "of books (in .txt format) that you would like to index."
+              << std::endl;
+    std::string documentsPath = GUTENBERG_DATA_DIR;
     // std::string documentsPath;
     // std::cin >> documentsPath;
     
@@ -46,6 +50,7 @@ int main() {
             frequencies[i][j] = frequency;
         }
     }
+    
 
     std::cout << '\t' << '\t';
     for (int i = 0; i < searchArgs.length; i++) {
