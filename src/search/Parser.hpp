@@ -77,7 +77,6 @@ class Parser {
         ArrayList<Argument> argsArray;
 
         while(!args.empty()) {
-            std::cout << "SYMBOL: " << args.size()-1 << std::endl;
             argsArray.append(args.top());
             args.pop();
             numOfArgs++;
@@ -110,13 +109,13 @@ class Parser {
             output += input[i];
             continue;
         }
-      if (!((int)input[i] <= 122 && (int)input[i] >= 65) || ((int)input[i] > 90 && (int)input[i] < 97)) {
-          continue;
-      }
-      if ((int)input[i] <= 90) {
-          input[i] += 32;
-      }
-      output += input[i];
+        if (!((int)input[i] <= 122 && (int)input[i] >= 65) || ((int)input[i] > 90 && (int)input[i] < 97)) {
+            continue;
+        }
+        if ((int)input[i] <= 90) {
+            input[i] += 32;
+        }
+        output += input[i];
     }
     return output;
   }

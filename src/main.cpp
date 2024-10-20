@@ -8,6 +8,7 @@
 #include "core/ArrayList.h"
 #include "Parser.hpp"
 #include "Indexer.hpp"
+#include "Autocomplete.hpp"
 
 #define K 5
 
@@ -27,37 +28,55 @@ int main() {
 
     indexer.index();
 
-    std::string query;
+    Autocomplete autocomplete(indexer.getVocabTrie());
 
-    std::cout << "Please enter a search term. It can be multiple words separated by spaces. i.e. (database computer internet): ";
-    std::getline(std::cin, query);
+    while (true) {
+        system("clear");
+        std::cout << "Welcome to Goggle! Enter \"search\" to search for a book or enter \"autocomplete\" to use our autocomplete feature!\n";
+        std::string choice;
+        std::cin >> choice;
 
-    Parser parser(query);
-
-    ArrayList<Argument> searchArgs = parser.parse();
-
-    ArrayList<int>* frequenciesTable = indexer.getFrequencyTable();
-    TrieNode* vocabTrie = indexer.getVocabTrie();
-
-    Book* documents = indexer.getDocuments();
-    MaxHeap<Result*> results;
-
-    for (int document_index = 0; document_index < indexer.getNumOfDocuments(); document_index++) {
-        std::string documentName = documents[document_index].name;
-        int score = 0;
-        for (int j = 0; j < searchArgs.length; j++) {
-            TrieNode* node = vocabTrie->check(searchArgs[j].word);
-            if (node == nullptr) {
-                continue;
-            }
-            int frequency = frequenciesTable[document_index][node->wordIndex];
-            score += frequency;
+        if (choice == "autocomplete") {
+            autocomplete.start();
+            continue;
         }
-        results.insert(new Result(documentName, score), score);
-    }
 
-    for (int i = 0; i < K; i++) {
-        Result* result = results.max();
-        std::cout << result->name << ": " << result->score << std::endl;
+        std::string query;
+
+        std::cout << "Please enter a search term. It can be multiple words separated by logical operators (AND and OR). Negation can also be used (NOT water AND wave): " << std::endl;
+        
+        std::cin.ignore();
+        std::getline(std::cin, query);
+
+        Parser parser(query);
+
+        ArrayList<Argument> searchArgs = parser.parse();
+
+        ArrayList<int>* frequenciesTable = indexer.getFrequencyTable();
+        TrieNode* vocabTrie = indexer.getVocabTrie();
+
+        int frequencies[indexer.getNumOfDocuments()][searchArgs.length];
+
+        Book* documents = indexer.getDocuments();
+        MaxHeap<Result*> results;
+
+        for (int document_index = 0; document_index < indexer.getNumOfDocuments(); document_index++) {
+            std::string documentName = documents[document_index].name;
+            int score = 0;
+            for (int j = 0; j < searchArgs.length; j++) {
+                TrieNode* node = vocabTrie->check(searchArgs[j].word);
+                if (node == nullptr) {
+                    continue;
+                }
+                int frequency = frequenciesTable[document_index][node->wordIndex];
+                score += frequency;
+            }
+            results.insert(new Result(documentName, score), score);
+        }
+
+        for (int i = 0; i < K; i++) {
+            Result* result = results.max();
+            std::cout << result->name << ": " << result->score << std::endl;
+        }
     }
 };

@@ -52,7 +52,7 @@ public:
         return numOfDocuments;
     }
 
-    book* getDocuments() {
+    Book* getDocuments() {
         return counter->documents;
     }
 
