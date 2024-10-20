@@ -3,7 +3,7 @@
 rm -rf ./gutenberg
 mkdir -p ./gutenberg
 
-for i in {1..3}
+for i in {1..100}
 do
     url="https://www.gutenberg.org/ebooks/${i}.txt.utf-8"
     wget -q "$url" -O "./gutenberg/${i}.txt.utf-8"
