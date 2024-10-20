@@ -49,7 +49,10 @@ public:
       }
       else
       {
-        currentNode->children[index] = new TrieNode(word[i], numOfWords);
+        currentNode->children[index]
+            = new TrieNode(
+                    word[i], 
+                    numOfWords);
         currentNode = currentNode->children[index];
       }
     }

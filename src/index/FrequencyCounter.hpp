@@ -8,10 +8,10 @@
 #include "DocumentSet.hpp"
 #include "StringUtils.hpp"
 
-struct book {
+struct Book {
     public:
-    book() : name(""), contents(nullptr) {};
-    book(std::string name, ArrayList<std::string>* contents) : name(name), path(path), contents(contents) {};
+    Book() : name(""), contents(nullptr) {};
+    Book(std::string name, ArrayList<std::string>* contents) : name(name), path(path), contents(contents) {};
     std::string name;
     std::string path;
     ArrayList<std::string>* contents;
@@ -21,14 +21,14 @@ class FrequencyCounter
 {
 public:
     int numOfDocuments;
-    book* documents;
+    Book* documents;
 
     FrequencyCounter(int numOfDocs) {
         numOfDocuments = numOfDocs;
         *nextFreeIndex = 0;
         *nextFreeIndexTitles = 0;
         vocabularyTrie = new TrieNode(nextFreeIndex);
-        documents = new book[numOfDocs];
+        documents = new Book[numOfDocs];
         frequencyTable = new ArrayList<int>[numOfDocs];
     }
 

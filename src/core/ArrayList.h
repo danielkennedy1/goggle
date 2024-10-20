@@ -54,7 +54,7 @@ public:
     }    
   };
 
-  T get(int index) { return array[index]; };
+  T& get(int index) { return array[index]; };
   void remove(int index) {
     length--;
     for (int i = index; i < length; i++)

@@ -1,18 +1,28 @@
-#include <iostream>
-#include <string>
-#include <ostream>
+#include "core/ArrayList.h"
+#include "index/FrequencyCounter.hpp"
 #include "index/file/FileReader.hpp"
+#include "MaxHeap.hpp"
+#include <iostream>
+#include <ostream>
+#include <string>
 #include "core/ArrayList.h"
 #include "Parser.hpp"
-#include "Index.hpp"
+#include "Indexer.hpp"
 #include "Autocomplete.hpp"
 
+#define K 5
+
+struct Result {
+    std::string name;
+    int score;
+    Result(std::string name, int score) : name(name), score(score) {}
+};
+
 int main() {
-    std::cout << "Welcome to Goggle!\nPlease enter the path to the directory of books (in .txt format) that you would like to index." <<std::endl;
-    // std::string documentsPath = GUTENBERG_DATA_DIR;
-    std::string documentsPath = TEST_DATA_DIR;
-    // std::string documentsPath;
-    // std::cin >> documentsPath;
+    std::cout << "Welcome to Goggle!\nPlease enter the path to the directory "
+                 "of books (in .txt format) that you would like to index."
+              << std::endl;
+    std::string documentsPath = GUTENBERG_DATA_DIR;
     
     Indexer indexer(documentsPath);
 
@@ -47,44 +57,25 @@ int main() {
 
         int frequencies[indexer.getNumOfDocuments()][searchArgs.length];
 
-        book* documents = indexer.getDocuments();
-        int numOfDocuments = indexer.getNumOfDocuments();
+        Book* documents = indexer.getDocuments();
+        MaxHeap<Result*> results;
 
-        for (int i = 0; i < numOfDocuments; i++) {
-            std::string documentName = documents[i].name;
+        for (int document_index = 0; document_index < indexer.getNumOfDocuments(); document_index++) {
+            std::string documentName = documents[document_index].name;
+            int score = 0;
             for (int j = 0; j < searchArgs.length; j++) {
                 TrieNode* node = vocabTrie->check(searchArgs[j].word);
                 if (node == nullptr) {
-                    frequencies[i][j] = 0;
                     continue;
                 }
-                int index = node->wordIndex;
-                int frequency = frequenciesTable[i][index];
-                frequencies[i][j] = frequency;
+                int frequency = frequenciesTable[document_index][node->wordIndex];
+                score += frequency;
             }
+            results.insert(new Result(documentName, score), score);
         }
 
-        std::cout << '\t' << '\t';
-        for (int i = 0; i < searchArgs.length; i++) {
-            if (searchArgs[i].word.size() < 8) {
-                std::cout << searchArgs[i].word << "\t" << "\t";
-            } else {
-                std::cout << searchArgs[i].word << "\t";
-            }
+        for (int i = 0; i < K; i++) {
+            Result* result = results.max();
+            std::cout << result->name << ": " << result->score << std::endl;
         }
-        std::cout << std::endl;
-
-        for (int i = 0; i < numOfDocuments; i++) {
-            std::string documentName = documents[i].name;
-            if(documentName.size() < 8) {
-                std::cout << documentName << "\t" << "\t";    
-            } else {
-                std::cout << documentName << "\t";
-            }
-            for (int j = 0; j < searchArgs.length; j++) {
-                std::cout << frequencies[i][j] << "\t\t";
-            }
-            std::cout << std::endl;
-        }
-    }
 };
