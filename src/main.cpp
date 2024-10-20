@@ -22,8 +22,6 @@ int main() {
                  "of books (in .txt format) that you would like to index."
               << std::endl;
     std::string documentsPath = GUTENBERG_DATA_DIR;
-    // std::string documentsPath;
-    // std::cin >> documentsPath;
     
     Indexer indexer(documentsPath);
 
@@ -41,25 +39,18 @@ int main() {
     ArrayList<int>* frequenciesTable = indexer.getFrequencyTable();
     TrieNode* vocabTrie = indexer.getVocabTrie();
 
-    int frequencies[indexer.getNumOfDocuments()][searchArgs.length];
-
-    book* documents = indexer.getDocuments();
-    int numOfDocuments = indexer.getNumOfDocuments();
-
+    Book* documents = indexer.getDocuments();
     MaxHeap<Result*> results;
 
-    for (int i = 0; i < numOfDocuments; i++) {
-        std::string documentName = documents[i].name;
+    for (int document_index = 0; document_index < indexer.getNumOfDocuments(); document_index++) {
+        std::string documentName = documents[document_index].name;
         int score = 0;
         for (int j = 0; j < searchArgs.length; j++) {
             TrieNode* node = vocabTrie->check(searchArgs[j].word);
             if (node == nullptr) {
-                frequencies[i][j] = 0;
                 continue;
             }
-            int index = node->wordIndex;
-            int frequency = frequenciesTable[i][index];
-            frequencies[i][j] = frequency;
+            int frequency = frequenciesTable[document_index][node->wordIndex];
             score += frequency;
         }
         results.insert(new Result(documentName, score), score);
