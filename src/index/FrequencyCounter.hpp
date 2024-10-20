@@ -28,14 +28,12 @@ public:
         *nextFreeIndex = 0;
         *nextFreeIndexTitles = 0;
         vocabularyTrie = new TrieNode(nextFreeIndex);
-        titleTrie = new TrieNode(nextFreeIndexTitles);
         documents = new book[numOfDocs];
         frequencyTable = new ArrayList<int>[numOfDocs];
     }
 
     ~FrequencyCounter() {
         delete vocabularyTrie;
-        delete titleTrie;
         delete[] frequencyTable;
         delete[] documents;
         delete nextFreeIndex;
@@ -49,8 +47,8 @@ public:
 
 
     void indexDocument(int docNum) {
-        titleTrie->insert(StringUtils::removeInvalidChars(StringUtils::parseDocNameFromPath(documents[docNum].name)));
         for(int i = 0; i < documents[docNum].contents->length; i++) {
+            std::cout << documents[docNum].contents->get(i) << std::endl;
             int index = vocabularyTrie->insert(documents[docNum].contents->get(i));
             while (index >= frequencyTable[docNum].length) {
                 frequencyTable[docNum].append(0);
@@ -62,13 +60,10 @@ public:
 
     TrieNode* getVocabTrie() {return vocabularyTrie;}
 
-    TrieNode* getTitleTrie() {return titleTrie;}
-
     ArrayList<int>* getFreqTable() {return frequencyTable;}
 
 private:
     TrieNode* vocabularyTrie;
-    TrieNode* titleTrie;
     ArrayList<int>* frequencyTable;
     int* nextFreeIndex = new int;
     int* nextFreeIndexTitles = new int;

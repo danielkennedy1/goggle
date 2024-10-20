@@ -13,6 +13,10 @@ public:
 
   TrieNode(char value, int* numOfWords)
   {
+    for (int i = 0; i < 26; i++)
+    {
+      children[i] = nullptr;
+    };
     nodeValue = value;
     wordIndex = -1;
     this->numOfWords = numOfWords;
@@ -21,7 +25,7 @@ public:
 
   TrieNode(int* numOfWords)
   {
-    for (int i = 0; i < 27; i++)
+    for (int i = 0; i < 26; i++)
     {
       children[i] = nullptr;
     };
@@ -39,9 +43,6 @@ public:
     for (int i = 0; i < word.size(); i++)
     {
       int index = word[i] - 'a';
-      if(index < 0 || index > 25) {
-        index = 26;
-      }
       if (currentNode->children[index])
       {
         currentNode = currentNode->children[index];
@@ -69,7 +70,7 @@ public:
       returnVal.append(currentWord + currentNode->nodeValue);
       return returnVal;
     }
-    for (int i = 0; i < 27; i++)
+    for (int i = 0; i < 26; i++)
     {
       if (currentNode->children[i])
       {
@@ -89,16 +90,13 @@ public:
     for (int i = 0; i < word.size(); i++)
     {
       int index = word[i] - 'a';
-      if(index < 0 || index > 25) {
-        index = 26;
-      }
       if (searchOrigin->children[index])
       {
         searchOrigin = searchOrigin->children[index];
         continue;
       }
     }
-    for (int i = 0; i < 27; i++)
+    for (int i = 0; i < 26; i++)
     {
       if (searchOrigin->children[i])
       {
@@ -117,9 +115,6 @@ public:
     for (int i = 0; i < word.size(); i++)
     {
       int index = word[i] - 'a';
-      if(index < 0 || index > 25) {
-        index = 26;
-      }
       if (currentNode->children[index])
         {
           currentNode = currentNode->children[index];
@@ -168,7 +163,7 @@ public:
 
   char nodeValue;
 private:
-  TrieNode *children[27];
+  TrieNode *children[26];
 };
 
 #endif // TRIE_H
