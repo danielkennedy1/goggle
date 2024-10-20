@@ -5,8 +5,9 @@
 #include <stack>
 
 struct Argument {
-    Argument(int index, bool required, bool negated) : index(index), required(required), negated(negated) {};
-    int index;
+    Argument() : word(""), required(false), negated(false) {};
+    Argument(std::string word, bool required, bool negated) : word(word), required(required), negated(negated) {};
+    std::string word;
     bool required;
     bool negated;
 };
@@ -17,9 +18,9 @@ class Parser {
 
     const std::string symbols[3] = {"or", "and", "not"};
 
-    Parser(std::string query, TrieNode* vocabTrie) : rawQuery(query), vocabTrie(vocabTrie) {};
+    Parser(std::string query) : rawQuery(query), vocabTrie(vocabTrie) {};
 
-    Argument* parse() {
+    ArrayList<Argument> parse() {
         std::string lowerCaseQuery = Parser::removeInvalidChars(rawQuery);
         ArrayList<std::string> queryComponents = Parser::splitString(lowerCaseQuery);
 
@@ -34,7 +35,7 @@ class Parser {
             if (symbol == "or") {
                 if (expectWord == true) {
                     std::cout << "INVALID QUERY - EXPECTED WORD" << std::endl;
-                    return nullptr;
+                    return ArrayList<Argument>();
                 }
                 expectWord = true;
                 continue;
@@ -42,11 +43,11 @@ class Parser {
             if (symbol == "and") {
                 if (expectWord == true) {
                     std::cout << "INVALID QUERY - EXPECTED WORD" << std::endl;
-                    return nullptr;
+                    return ArrayList<Argument>();
                 }
                 if (args.size() == 0) {
                     std::cout << "INVALID QUERY" << std::endl;
-                    return nullptr;
+                    return ArrayList<Argument>();
                 }
                 Argument previouArg = args.top();
                 args.pop();
@@ -64,25 +65,20 @@ class Parser {
 
             if (expectWord == false) {
                 std::cout << "INVALID QUERY" << std::endl;
-                return nullptr;
+                return ArrayList<Argument>();
             }
 
-            TrieNode* node = vocabTrie->check(symbol);
-            if (node == nullptr) {
-                std::cout << "WORD " << symbol << " NOT IN CORPUS VOCABULARY" << std::endl;
-                return nullptr;
-            }
-
-            args.push(Argument(node->wordIndex, require, negate));
+            args.push(Argument(symbol, require, negate));
             require = false;
             negate = false;
             expectWord = false;
         }
 
-        Argument* argsArray;
+        ArrayList<Argument> argsArray;
 
         while(!args.empty()) {
-            argsArray[args.size()-1] = args.top();
+            std::cout << "SYMBOL: " << args.size()-1 << std::endl;
+            argsArray.append(args.top());
             args.pop();
             numOfArgs++;
         }
