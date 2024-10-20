@@ -1,27 +1,63 @@
+#ifndef INDEX_H
+#define INDEX_H
 #include "ArrayList.h"
 #include "DocumentSet.hpp"
-#include "FileReader.hpp"
 #include "HashMap.hpp"
-#include <string>
-#include <strings.h>
 #include "FrequencyCounter.hpp"
+#include <string>
 
-class Index {
+class Indexer {
 public:
-    Index(std::string directory) {
-        counters = new ArrayList<FrequencyCounter*>;
+    Indexer(std::string directory) {
         DocumentSet* documents = new DocumentSet(directory);
-        ArrayList<std::string>* document_paths = documents->getDocumentPaths();
+        documentPaths = documents->getDocumentPaths();
+        numOfDocuments = documentPaths->length;
+        counter = new FrequencyCounter(numOfDocuments);       
+    }
 
-        for (int i = 0; i < document_paths->length; i++) {
-            FileReader reader = FileReader(document_paths->get(i));
+    ~Indexer() {
+        delete documentPaths;
+        delete counter;
+    }
+
+    void index() {
+        std::cout << "Indexing documents..." << std::endl;
+
+        for (int i = 0; i < numOfDocuments; i++) {
+            std::cout << "Indexing: " << documentPaths->get(i) << std::endl;
+            FileReader reader = FileReader(documentPaths->get(i));
             ArrayList<std::string>* words = reader.read();
 
-            FrequencyCounter* counter = new FrequencyCounter(words);
+            counter->addDocument(i, words, documentPaths->get(i));
+            counter->indexDocument(i);
+        }
 
-            counters->append(counter);
+        std::cout << "Documents indexed: " << std::endl;
+
+        for (int i = 0; i < counter->numOfDocuments; i++) {
+            std::cout << i << ": " << counter->documents[i].name << std::endl;
         }
     }
 
-    ArrayList<FrequencyCounter*>* counters = nullptr;
+    TrieNode* getVocabTrie() {
+        return counter->getVocabTrie();
+    }
+
+    ArrayList<int>* getFrequencyTable() {
+        return counter->getFreqTable();
+    }
+
+    int getNumOfDocuments() {
+        return numOfDocuments;
+    }
+
+    book* getDocuments() {
+        return counter->documents;
+    }
+
+private:
+    FrequencyCounter* counter = nullptr;
+    ArrayList<std::string>* documentPaths;
+    int numOfDocuments;
 };
+#endif

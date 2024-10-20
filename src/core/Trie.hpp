@@ -116,7 +116,6 @@ public:
     TrieNode *currentNode = this;
     for (int i = 0; i < word.size(); i++)
     {
-      std::cout << currentNode->nodeValue << std::endl;
       int index = word[i] - 'a';
       if(index < 0 || index > 25) {
         index = 26;

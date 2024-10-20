@@ -30,21 +30,5 @@ class StringUtils {
     }
     return output;
   }
-
-  static ArrayList<std::string> splitString(std::string input) {
-    ArrayList<std::string> output;
-    std::string word;
-    for (int i = 0; i < input.size(); i++) {
-        if (input[i] == ' ' || i == input.size()-1) {
-            if (i == input.size()-1) {
-                word += input[i];
-            }
-            output.append(word);
-            word = "";
-            continue;
-        }
-        word += input[i];
-    }
-    return output;
-  }
+  
 };

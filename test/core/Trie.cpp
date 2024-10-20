@@ -1,8 +1,6 @@
 #include <gtest/gtest.h>
 #include "Trie.hpp"
 
-// int TrieNode::numOfWords = 0;
-
 TEST(TrieTests, TestInsertionAndCheck)
 {
     int numOfWords = 0;
