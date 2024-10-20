@@ -1,14 +1,27 @@
-#include <iostream>
-#include <string>
-#include <ostream>
+#include "core/ArrayList.h"
+#include "index/FrequencyCounter.hpp"
 #include "index/file/FileReader.hpp"
+#include "MaxHeap.hpp"
+#include <iostream>
+#include <ostream>
+#include <string>
 #include "core/ArrayList.h"
 #include "Parser.hpp"
-#include "Index.hpp"
+#include "Indexer.hpp"
+
+#define K 5
+
+struct Result {
+    std::string name;
+    int score;
+    Result(std::string name, int score) : name(name), score(score) {}
+};
 
 int main() {
-    std::cout << "Welcome to Goggle!\nPlease enter the path to the directory of books (in .txt format) that you would like to index." <<std::endl;
-    std::string documentsPath = TEST_DATA_DIR;
+    std::cout << "Welcome to Goggle!\nPlease enter the path to the directory "
+                 "of books (in .txt format) that you would like to index."
+              << std::endl;
+    std::string documentsPath = GUTENBERG_DATA_DIR;
     // std::string documentsPath;
     // std::cin >> documentsPath;
     
@@ -33,8 +46,11 @@ int main() {
     book* documents = indexer.getDocuments();
     int numOfDocuments = indexer.getNumOfDocuments();
 
+    MaxHeap<Result*> results;
+
     for (int i = 0; i < numOfDocuments; i++) {
         std::string documentName = documents[i].name;
+        int score = 0;
         for (int j = 0; j < searchArgs.length; j++) {
             TrieNode* node = vocabTrie->check(searchArgs[j].word);
             if (node == nullptr) {
@@ -44,25 +60,13 @@ int main() {
             int index = node->wordIndex;
             int frequency = frequenciesTable[i][index];
             frequencies[i][j] = frequency;
+            score += frequency;
         }
+        results.insert(new Result(documentName, score), score);
     }
 
-    std::cout << '\t' << '\t';
-    for (int i = 0; i < searchArgs.length; i++) {
-        std::cout << searchArgs[i].word << '\t';
-    }
-    std::cout << std::endl;
-
-    for (int i = 0; i < numOfDocuments; i++) {
-        std::string documentName = documents[i].name;
-        if(documentName.size() < 10) {
-            std::cout << documentName << '\t' << '\t';    
-        } else {
-            std::cout << documentName << '\t';
-        }
-        for (int j = 0; j < searchArgs.length; j++) {
-            std::cout << frequencies[i][j] << '\t';
-        }
-        std::cout << std::endl;
+    for (int i = 0; i < K; i++) {
+        Result* result = results.max();
+        std::cout << result->name << ": " << result->score << std::endl;
     }
 };
