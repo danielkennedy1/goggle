@@ -28,8 +28,6 @@ public:
             FileReader reader = FileReader(documentPaths->get(i));
             ArrayList<std::string>* words = reader.read();
 
-            std::cout << words->get(0) << std::endl;
-
             counter->addDocument(i, words, documentPaths->get(i));
 
             counter->indexDocument(i);
