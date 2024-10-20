@@ -2,6 +2,9 @@
 #include "index/FrequencyCounter.hpp"
 #include "index/file/FileReader.hpp"
 #include "MaxHeap.hpp"
+#include <algorithm>
+#include <cassert>
+#include <fstream>
 #include <iostream>
 #include <ostream>
 #include <string>
@@ -36,11 +39,40 @@ int main() {
 
     ArrayList<Argument> searchArgs = parser.parse();
 
-    ArrayList<int>* frequenciesTable = indexer.getFrequencyTable();
+
+    ArrayList<int>* frequenciesLists = indexer.getFrequencyTable();
+
+    int tablewidth = 0;
+    for (int i = 0; i < indexer.getNumOfDocuments(); i++) {
+        if (frequenciesLists[i].length > tablewidth) tablewidth = frequenciesLists[i].length;
+    }
+    std::cout << "tableWidth: " << tablewidth << std::endl;
+
+    for (int i = 0; i < indexer.getNumOfDocuments(); i++) {
+        frequenciesLists[i].resize(tablewidth);
+    }
+
+    ArrayList<int>* allFrequencies = new ArrayList<int>();
+
+    for (int i = 0; i < indexer.getNumOfDocuments(); i++) {
+        for (int j = 0; j < tablewidth; j++) {
+            allFrequencies->append(frequenciesLists[i][j]);
+        }
+    }
+
     TrieNode* vocabTrie = indexer.getVocabTrie();
 
+    std::string frequenciesTableLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/frequencies_table.bin");
+    allFrequencies->serialize(frequenciesTableLocation);
+
+    ArrayList<int> deserFrequenciesTable = ArrayList<int>::deserialize(frequenciesTableLocation);
+
     Book* documents = indexer.getDocuments();
+
     MaxHeap<Result*> results;
+
+    std::ifstream file(frequenciesTableLocation, std::ios::binary);
+    int frequency;
 
     for (int document_index = 0; document_index < indexer.getNumOfDocuments(); document_index++) {
         std::string documentName = documents[document_index].name;
@@ -50,11 +82,15 @@ int main() {
             if (node == nullptr) {
                 continue;
             }
-            int frequency = frequenciesTable[document_index][node->wordIndex];
+            file.seekg((document_index * tablewidth + node->wordIndex) * sizeof(int), std::ios::beg);
+            file.read(reinterpret_cast<char*>(&frequency), sizeof(int));
+
             score += frequency;
         }
         results.insert(new Result(documentName, score), score);
     }
+
+    file.close();
 
     for (int i = 0; i < K; i++) {
         Result* result = results.max();

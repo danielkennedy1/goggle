@@ -30,20 +30,37 @@ TEST(ArrayListTests, TestUpdate) {
     ASSERT_EQ(arraylist->get(2), "three");
 }
 
-TEST(ArrayListTests, TestSerializationDeserialization) {
-    ArrayList<std::string>* arraylist = new ArrayList<std::string>();
+TEST(ArrayListTests, TestCharSerializationDeserialization) {
+    ArrayList<char>* arraylist = new ArrayList<char>();
 
-    arraylist->append("one");
-    arraylist->append("two");
-    arraylist->append("three");
-
-    arraylist->update(1, "four");
+    arraylist->append('a');
+    arraylist->append('b');
+    arraylist->append('c');
 
     std::string documentsPath = SERIALIZED_DATA_DIR;
 
     arraylist->serialize(documentsPath + "/testing_arraylist_serialization");
 
-    ArrayList<std::string> deserArrayList = ArrayList<std::string>::deserialize(documentsPath + "/testing_arraylist_serialization");
+    ArrayList<char> deserArrayList = ArrayList<char>::deserialize(documentsPath + "/testing_arraylist_serialization");
+
+    std::remove((documentsPath + "/testing_arraylist_serialization").c_str());
+
+    ASSERT_TRUE(0 == std::memcmp(arraylist->array, deserArrayList.array, arraylist->size));
+}
+
+TEST(ArrayListTests, TestIntSerializationDeserialization) {
+    ArrayList<int>* arraylist = new ArrayList<int>();
+
+    arraylist->append(1);
+    arraylist->append(2);
+    arraylist->append(3);
+    arraylist->append(4);
+
+    std::string documentsPath = SERIALIZED_DATA_DIR;
+
+    arraylist->serialize(documentsPath + "/testing_arraylist_serialization");
+
+    ArrayList<int> deserArrayList = ArrayList<int>::deserialize(documentsPath + "/testing_arraylist_serialization");
 
     std::remove((documentsPath + "/testing_arraylist_serialization").c_str());
 

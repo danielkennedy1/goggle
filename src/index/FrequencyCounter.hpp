@@ -1,11 +1,8 @@
 #ifndef FREQUENCYCOUNTER_H
 #define FREQUENCYCOUNTER_H
 #include <string>
-#include <utility>
-#include <iostream>
 #include "core/Trie.hpp"
 #include "ArrayList.h"
-#include "DocumentSet.hpp"
 #include "StringUtils.hpp"
 
 struct Book {

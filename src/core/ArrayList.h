@@ -1,5 +1,7 @@
 #ifndef ARRAYLIST_H
 #define ARRAYLIST_H
+#include <cstddef>
+#include <ios>
 #include <iostream>
 #include <fstream>
 
@@ -77,14 +79,23 @@ public:
                 << std::endl;
             return;
         }
-        file.write(reinterpret_cast<const char*>(this),
-                   sizeof(*this));
+
+        char* buffer = new char[length * sizeof(T)];
+
+        for(int i = 0; i < length; i++) {
+            char* serialized_value = reinterpret_cast<char*>(&array[i]);
+            for (int j = 0; j < sizeof(T); j++) {
+                buffer[i * sizeof(T) + j] = serialized_value[j];
+            }
+        }
+
+        file.write(buffer, length * sizeof(T));
         file.close();
-        std::cout << "Object serialized successfully." << std::endl;
     }
 
     static ArrayList<T> deserialize(const std::string& filename)
     {
+
         ArrayList<T> obj;
         std::ifstream file(filename, std::ios::binary);
         if (!file.is_open()) {
@@ -93,18 +104,30 @@ public:
                 << std::endl;
             return obj;
         }
-        file.read(reinterpret_cast<char*>(&obj),
-                    sizeof(obj));
+
+        file.seekg(0, std::ios::end);
+        std::streamsize fileSize = file.tellg();
+        file.seekg(0, std::ios::beg);
+
+        int length = (fileSize / sizeof(T));
+
+        char* buffer = new char[fileSize]; 
+        file.read(buffer, fileSize);
+
+        T* cast_buffer = reinterpret_cast<T*>(buffer);
+
+        for (size_t i = 0; i < length; i++) {
+            obj.append(cast_buffer[i]);
+        }
+
         file.close();
-        std::cout << "Object deserialized successfully." << std::endl;
         return obj;
     }
 
-private:
     void resize(int newSize) {
         T *newArray = new T[newSize](); // () 0s the elements
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < length; i++) {
             newArray[i] = array[i];
         }
         size = newSize;
