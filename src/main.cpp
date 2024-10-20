@@ -78,4 +78,5 @@ int main() {
             Result* result = results.max();
             std::cout << result->name << ": " << result->score << std::endl;
         }
+    }
 };
