@@ -48,7 +48,6 @@ public:
 
     void indexDocument(int docNum) {
         for(int i = 0; i < documents[docNum].contents->length; i++) {
-            std::cout << documents[docNum].contents->get(i) << std::endl;
             int index = vocabularyTrie->insert(documents[docNum].contents->get(i));
             while (index >= frequencyTable[docNum].length) {
                 frequencyTable[docNum].append(0);

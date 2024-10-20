@@ -25,8 +25,15 @@ include_directories(
   src/index/
   src/index/file/
   src/search/
+  src/interface/
 )
 
+find_package(Curses REQUIRED)
+
+target_link_libraries(
+  goggle
+  ncurses
+)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -41,7 +48,7 @@ add_executable(
   test/search/Parser.cpp
 )
 
-target_sources(test_search PRIVATE 
+target_sources(test_search PRIVATE
   src/index/file/FileReader.cpp
   src/search/Parser.hpp
 )
