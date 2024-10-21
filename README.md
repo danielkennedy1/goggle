@@ -36,6 +36,8 @@ w{_x}{_,}{_y}=tf{_x}{_,}{_y} × log({N \over df_x})
     - **[REFAC]**: Code refactor
     - **[BUILD]**: Build system related change
     - **[BUG]**: Bug fix
+ 
+- We have configured our automated tests to run on each push to GitHub using GitHub Actions.
 
 ## NOTES:
 - I reckon we should seperate the file ingress and index creation from each other so its easier to test.
