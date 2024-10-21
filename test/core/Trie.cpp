@@ -12,11 +12,13 @@ TEST(TrieTests, TestInsertionAndCheck)
     trie->insert("task");
     trie->insert("talk");
     trie->insert("testable");
+    trie->insert("the");
 
     ASSERT_TRUE(trie->check("testing"));
     ASSERT_TRUE(trie->check("task"));
     ASSERT_FALSE(trie->check("test"));
     ASSERT_FALSE(trie->check("abc"));
+    ASSERT_FALSE(trie->check("there"));
 }
 
 TEST(TrieTests, TestSerializationDeserialization) {
