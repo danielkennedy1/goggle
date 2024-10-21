@@ -28,7 +28,6 @@ void search(TrieNode* vocabTrie) {
                  "also be used (NOT water AND wave): "
               << std::endl;
 
-    std::cin.ignore();
     std::getline(std::cin, query);
 
     Parser parser(query);
