@@ -6,6 +6,7 @@
 #include "DocumentSet.hpp"
 #include "FrequencyCounter.hpp"
 #include "FileReader.hpp"
+#include "Book.hpp"
 
 class Index {
 public:

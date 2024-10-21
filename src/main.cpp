@@ -2,11 +2,14 @@
 #include <iostream>
 #include <ostream>
 #include <string>
+
 #include "Trie.hpp"
 #include "MaxHeap.hpp"
 #include "ArrayList.h"
 #include "Parser.hpp"
 #include "Index.hpp"
+
+#include "Result.hpp"
 
 #define K 5
 
@@ -15,11 +18,6 @@ std::string vocabTrieLocation = std::string(SERIALIZED_DATA_DIR) + std::string("
 std::string bookPathsLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/book_paths.txt");
 std::string tableWidthLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/table_width.txt");
 
-struct Result {
-    std::string name;
-    int score;
-    Result(std::string name, int score) : name(name), score(score) {}
-};
 
 void index() {
     Index index(GUTENBERG_DATA_DIR);
@@ -33,8 +31,6 @@ void index() {
 };
 
 void search() {
-    MaxHeap<Result*> results;
-
     std::string query;
 
     std::cout << "Please enter a search term. It can be multiple words separated by spaces. i.e. (database computer internet): ";
@@ -71,6 +67,8 @@ void search() {
 
     std::ifstream frequencyTableFile(frequenciesTableLocation, std::ios::binary);
     int frequency;
+
+    MaxHeap<Result*> results;
 
     for (int document_index = 0; document_index < file_paths->length; document_index++) {
         std::string documentName = file_paths->get(document_index);

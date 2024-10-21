@@ -25,6 +25,7 @@ include_directories(
   src/index/
   src/index/file/
   src/search/
+  src/model/
 )
 
 
