@@ -1,15 +1,11 @@
-#include <fstream>
 #include <iostream>
 #include <ostream>
 #include <string>
 
-#include "Trie.hpp"
-#include "MaxHeap.hpp"
+#include "Search.hpp"
 #include "ArrayList.h"
 #include "Parser.hpp"
 #include "Index.hpp"
-
-#include "Result.hpp"
 
 #define K 5
 
@@ -40,58 +36,14 @@ void search() {
 
     ArrayList<Argument> searchArgs = parser.parse();
 
-    std::ifstream paths_in(bookPathsLocation);
+    Search search(
+           frequenciesTableLocation,
+           vocabTrieLocation,
+           bookPathsLocation,
+           tableWidthLocation
+            );
 
-    ArrayList<std::string>* file_paths = new ArrayList<std::string>();
-
-    std::cout << "getting paths..." << std::endl;
-    std::string path;
-    while (paths_in >> path) {
-        file_paths->append(path);
-    }
-                                                      
-    paths_in.close();
-
-    std::ifstream table_width_file(tableWidthLocation);
-
-    std::string table_width_str;
-    table_width_file >> table_width_str;
-
-    int tablewidth = std::stoi(table_width_str);
-
-    std::cout << "before deserialize" << std::endl;
-                                                      
-    TrieNode deserVocabTrie = TrieNode::deserialize(vocabTrieLocation);
-
-    std::cout << "numOfWords: " << *deserVocabTrie.numOfWords << std::endl;
-
-    std::ifstream frequencyTableFile(frequenciesTableLocation, std::ios::binary);
-    int frequency;
-
-    MaxHeap<Result*> results;
-
-    for (int document_index = 0; document_index < file_paths->length; document_index++) {
-        std::string documentName = file_paths->get(document_index);
-        int score = 0;
-        for (int j = 0; j < searchArgs.length; j++) {
-            TrieNode* node = deserVocabTrie.check(searchArgs[j].word);
-            if (node == nullptr) {
-                continue;
-            }
-            frequencyTableFile.seekg((document_index * tablewidth + node->wordIndex) * sizeof(int), std::ios::beg);
-            frequencyTableFile.read(reinterpret_cast<char*>(&frequency), sizeof(int));
-
-            score += frequency;
-        }
-        results.insert(new Result(documentName, score), score);
-    }
-
-    frequencyTableFile.close();
-
-    for (int i = 0; i < K; i++) {
-        Result* result = results.max();
-        std::cout << result->name << ": " << result->score << std::endl;
-    }
+    search.search(searchArgs, K);
 }
 
 
