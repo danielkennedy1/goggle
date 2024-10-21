@@ -124,6 +124,7 @@ public:
           currentNode = currentNode->children[index];
           continue;
         }
+        return nullptr;
     }
     if (currentNode->wordIndex != -1)
     {
