@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <filesystem>
 #include "Trie.hpp"
 
 TEST(TrieTests, TestInsertionAndCheck)
@@ -32,7 +33,14 @@ TEST(TrieTests, TestSerializationDeserialization) {
     trie->insert("talk");
     trie->insert("testable");
 
+    std::filesystem::path filepath = std::string(SERIALIZED_DATA_DIR);
+    bool filepathExists = std::filesystem::is_directory(filepath.parent_path());
+
     std::string documentsPath = SERIALIZED_DATA_DIR;
+    
+    if(!filepathExists) {
+        std::filesystem::create_directory(documentsPath + "/testing_arraylist_serialization");
+    }
 
     trie->serialize(documentsPath + "/testing_trie_serialization");
 

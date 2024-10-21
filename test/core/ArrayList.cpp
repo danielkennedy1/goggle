@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <cstring>
+#include <filesystem>
 #include "ArrayList.h"
 
 TEST(ArrayListTests, TestInsertionAndDeletion) {
@@ -39,7 +40,14 @@ TEST(ArrayListTests, TestSerializationDeserialization) {
 
     arraylist->update(1, "four");
 
+    std::filesystem::path filepath = std::string(SERIALIZED_DATA_DIR);
+    bool filepathExists = std::filesystem::is_directory(filepath.parent_path());
+
     std::string documentsPath = SERIALIZED_DATA_DIR;
+    
+    if(!filepathExists) {
+        std::filesystem::create_directory(documentsPath + "/testing_arraylist_serialization");
+    }
 
     arraylist->serialize(documentsPath + "/testing_arraylist_serialization");
 
