@@ -1,18 +1,21 @@
+#include "Trie.hpp"
 #include "core/ArrayList.h"
-#include "index/FrequencyCounter.hpp"
 #include "index/file/FileReader.hpp"
 #include "MaxHeap.hpp"
-#include <algorithm>
-#include <cassert>
 #include <fstream>
 #include <iostream>
 #include <ostream>
 #include <string>
 #include "core/ArrayList.h"
 #include "Parser.hpp"
-#include "Indexer.hpp"
+#include "Index.hpp"
 
 #define K 5
+
+std::string frequenciesTableLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/frequencies_table.bin");
+std::string vocabTrieLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/vocab_trie.bin");
+std::string bookPathsLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/book_paths.txt");
+std::string tableWidthLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/table_width.txt");
 
 struct Result {
     std::string name;
@@ -20,15 +23,18 @@ struct Result {
     Result(std::string name, int score) : name(name), score(score) {}
 };
 
-int main() {
-    std::cout << "Welcome to Goggle!\nPlease enter the path to the directory "
-                 "of books (in .txt format) that you would like to index."
-              << std::endl;
-    std::string documentsPath = GUTENBERG_DATA_DIR;
-    
-    Indexer indexer(documentsPath);
+void index() {
+    Index index(GUTENBERG_DATA_DIR);
+    index.persist(
+           frequenciesTableLocation,
+           vocabTrieLocation,
+           bookPathsLocation,
+           tableWidthLocation
+            );
+};
 
-    indexer.index();
+void search() {
+    MaxHeap<Result*> results;
 
     std::string query;
 
@@ -39,61 +45,62 @@ int main() {
 
     ArrayList<Argument> searchArgs = parser.parse();
 
+    std::ifstream paths_in(bookPathsLocation);
 
-    ArrayList<int>* frequenciesLists = indexer.getFrequencyTable();
+    ArrayList<std::string>* file_paths = new ArrayList<std::string>();
 
-    int tablewidth = 0;
-    for (int i = 0; i < indexer.getNumOfDocuments(); i++) {
-        if (frequenciesLists[i].length > tablewidth) tablewidth = frequenciesLists[i].length;
+    std::cout << "getting paths..." << std::endl;
+    std::string path;
+    while (paths_in >> path) {
+        file_paths->append(path);
     }
-    std::cout << "tableWidth: " << tablewidth << std::endl;
+                                                      
+    paths_in.close();
 
-    for (int i = 0; i < indexer.getNumOfDocuments(); i++) {
-        frequenciesLists[i].resize(tablewidth);
-    }
+    std::ifstream table_width_file(tableWidthLocation);
 
-    ArrayList<int>* allFrequencies = new ArrayList<int>();
+    std::string table_width_str;
+    table_width_file >> table_width_str;
 
-    for (int i = 0; i < indexer.getNumOfDocuments(); i++) {
-        for (int j = 0; j < tablewidth; j++) {
-            allFrequencies->append(frequenciesLists[i][j]);
-        }
-    }
+    int tablewidth = std::stoi(table_width_str);
 
-    TrieNode* vocabTrie = indexer.getVocabTrie();
+    std::cout << "before deserialize" << std::endl;
+                                                      
+    TrieNode deserVocabTrie = TrieNode::deserialize(vocabTrieLocation);
 
-    std::string frequenciesTableLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/frequencies_table.bin");
-    allFrequencies->serialize(frequenciesTableLocation);
+    std::cout << "numOfWords: " << *deserVocabTrie.numOfWords << std::endl;
 
-    ArrayList<int> deserFrequenciesTable = ArrayList<int>::deserialize(frequenciesTableLocation);
-
-    Book* documents = indexer.getDocuments();
-
-    MaxHeap<Result*> results;
-
-    std::ifstream file(frequenciesTableLocation, std::ios::binary);
+    std::ifstream frequencyTableFile(frequenciesTableLocation, std::ios::binary);
     int frequency;
 
-    for (int document_index = 0; document_index < indexer.getNumOfDocuments(); document_index++) {
-        std::string documentName = documents[document_index].name;
+    for (int document_index = 0; document_index < file_paths->length; document_index++) {
+        std::string documentName = file_paths->get(document_index);
         int score = 0;
         for (int j = 0; j < searchArgs.length; j++) {
-            TrieNode* node = vocabTrie->check(searchArgs[j].word);
+            TrieNode* node = deserVocabTrie.check(searchArgs[j].word);
             if (node == nullptr) {
                 continue;
             }
-            file.seekg((document_index * tablewidth + node->wordIndex) * sizeof(int), std::ios::beg);
-            file.read(reinterpret_cast<char*>(&frequency), sizeof(int));
+            frequencyTableFile.seekg((document_index * tablewidth + node->wordIndex) * sizeof(int), std::ios::beg);
+            frequencyTableFile.read(reinterpret_cast<char*>(&frequency), sizeof(int));
 
             score += frequency;
         }
         results.insert(new Result(documentName, score), score);
     }
 
-    file.close();
+    frequencyTableFile.close();
 
     for (int i = 0; i < K; i++) {
         Result* result = results.max();
         std::cout << result->name << ": " << result->score << std::endl;
     }
+}
+
+
+int main() {
+    index();
+    std::cout << "INDEX FINISHED" << std::endl;
+    search();
 };
+

@@ -68,10 +68,7 @@ public:
     ArrayList<std::string> words;
     if (currentNode->wordIndex != -1)
     {
-      std::cout << "VALUE: " << currentNode->nodeValue << std::endl;
-      ArrayList<std::string> returnVal;
-      returnVal.append(currentWord + currentNode->nodeValue);
-      return returnVal;
+      words.append(currentWord + currentNode->nodeValue);
     }
     for (int i = 0; i < 26; i++)
     {
@@ -98,6 +95,10 @@ public:
         searchOrigin = searchOrigin->children[index];
         continue;
       }
+      return words;
+    }
+    if (searchOrigin->wordIndex != -1) {
+      words.append(word);
     }
     for (int i = 0; i < 26; i++)
     {
@@ -123,6 +124,7 @@ public:
           currentNode = currentNode->children[index];
           continue;
         }
+        return nullptr;
     }
     if (currentNode->wordIndex != -1)
     {

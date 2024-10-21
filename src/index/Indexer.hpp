@@ -5,6 +5,7 @@
 #include "HashMap.hpp"
 #include "FrequencyCounter.hpp"
 #include <string>
+#include "FileReader.hpp"
 
 class Indexer {
 public:
