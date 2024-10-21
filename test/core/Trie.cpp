@@ -34,12 +34,12 @@ TEST(TrieTests, TestSerializationDeserialization) {
     trie->insert("testable");
 
     std::filesystem::path filepath = std::string(SERIALIZED_DATA_DIR);
-    bool filepathExists = std::filesystem::is_directory(filepath.parent_path());
-
+    bool filepathExists = std::filesystem::is_directory(filepath);
+    
     std::string documentsPath = SERIALIZED_DATA_DIR;
     
     if(!filepathExists) {
-        std::filesystem::create_directory(documentsPath + "/testing_arraylist_serialization");
+        std::filesystem::create_directory(filepath);
     }
 
     trie->serialize(documentsPath + "/testing_trie_serialization");
