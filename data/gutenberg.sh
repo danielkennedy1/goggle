@@ -20,4 +20,6 @@ do
     echo "${clean_title}.txt"
 done
 
+rm "./gutenberg/.txt"
+
 echo "All files processed!"

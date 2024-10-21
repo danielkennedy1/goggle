@@ -14,7 +14,6 @@ std::string vocabTrieLocation = std::string(SERIALIZED_DATA_DIR) + std::string("
 std::string bookPathsLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/book_paths.txt");
 std::string tableWidthLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/table_width.txt");
 
-
 void index() {
     Index index(GUTENBERG_DATA_DIR);
     index.index();
@@ -52,4 +51,3 @@ int main() {
     std::cout << "INDEX FINISHED" << std::endl;
     search();
 };
-

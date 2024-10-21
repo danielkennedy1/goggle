@@ -40,9 +40,6 @@ public:
         std::string table_width_str;
         table_width_file >> table_width_str;
         tablewidth = std::stoi(table_width_str);
-
-        //deserVocabTrie = TrieNode::deserialize(vocab_trie_location);
-
     }
     
     void search(ArrayList<Argument> searchArgs, int k) {
