@@ -1,12 +1,19 @@
-#include "Indexer.hpp"
-#include "strstream"
+#include <strstream>
 #include <filesystem>
 #include <string>
+#include <iostream>
+
+#include "DocumentSet.hpp"
+#include "FrequencyCounter.hpp"
+#include "FileReader.hpp"
 
 class Index {
 public:
-    Index(std::string documents_path) : indexer(documents_path) {
-        indexer.index();
+    Index(std::string documents_path) {
+        DocumentSet* documents = new DocumentSet(documents_path);
+        documentPaths = documents->getDocumentPaths();
+        numOfDocuments = documentPaths->length;
+        counter = new FrequencyCounter(numOfDocuments);       
     }
 
     void persist(std::string frequency_table_location,
@@ -27,26 +34,49 @@ public:
 
     }
 
+    void index() {
+        std::cout << "Indexing documents..." << std::endl;
+
+        for (int i = 0; i < numOfDocuments; i++) {
+            std::cout << "Indexing: " << documentPaths->get(i) << std::endl;
+            FileReader reader = FileReader(documentPaths->get(i));
+            ArrayList<std::string>* words = reader.read();
+
+            counter->addDocument(i, words, documentPaths->get(i));
+
+            counter->indexDocument(i);
+        }
+
+        std::cout << "Documents indexed: " << std::endl;
+
+        for (int i = 0; i < counter->numOfDocuments; i++) {
+            std::cout << i << ": " << counter->documents[i].name << std::endl;
+        }
+    }
+
 private:
-    Indexer indexer;
     int table_width;
+
+    FrequencyCounter* counter = nullptr;
+    ArrayList<std::string>* documentPaths;
+    int numOfDocuments;
 
     void persist_frequencies(std::string frequency_table_location) {
 
-        ArrayList<int>* frequencies = indexer.getFrequencyTable();
+        ArrayList<int>* frequencies = counter->getFreqTable();
 
-        for (int i = 0; i < indexer.getNumOfDocuments(); i++) {
+        for (int i = 0; i < numOfDocuments; i++) {
             if (frequencies[i].length > table_width)
                 table_width = frequencies[i].length;
         }
 
-        for (int i = 0; i < indexer.getNumOfDocuments(); i++) {
+        for (int i = 0; i < numOfDocuments; i++) {
             frequencies[i].resize(table_width);
         }
 
         ArrayList<int>* flat_frequencies = new ArrayList<int>();
 
-        for (int i = 0; i < indexer.getNumOfDocuments(); i++) {
+        for (int i = 0; i < numOfDocuments; i++) {
             for (int j = 0; j < table_width; j++) {
                 flat_frequencies->append(frequencies[i][j]);
             }
@@ -55,17 +85,17 @@ private:
     }
 
     void persist_vocab_trie(std::string vocab_trie_location) {
-        TrieNode* vocabTrie = indexer.getVocabTrie();
+        TrieNode* vocabTrie = counter->getVocabTrie();
 
         vocabTrie->serialize(vocab_trie_location);
     }
 
     void persist_document_paths(std::string document_path_location) {
-        Book* documents = indexer.getDocuments();
+        Book* documents = counter->documents;
 
         std::strstream book_paths;
 
-        for (int i = 0; i < indexer.getNumOfDocuments(); i++) {
+        for (int i = 0; i < numOfDocuments; i++) {
             book_paths << documents[i].path << " ";
         }
 

@@ -1,12 +1,10 @@
-#include "Trie.hpp"
-#include "core/ArrayList.h"
-#include "index/file/FileReader.hpp"
-#include "MaxHeap.hpp"
 #include <fstream>
 #include <iostream>
 #include <ostream>
 #include <string>
-#include "core/ArrayList.h"
+#include "Trie.hpp"
+#include "MaxHeap.hpp"
+#include "ArrayList.h"
 #include "Parser.hpp"
 #include "Index.hpp"
 
@@ -25,6 +23,7 @@ struct Result {
 
 void index() {
     Index index(GUTENBERG_DATA_DIR);
+    index.index();
     index.persist(
            frequenciesTableLocation,
            vocabTrieLocation,
