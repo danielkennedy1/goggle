@@ -46,20 +46,20 @@ TEST(TrieTests, TestSerializationDeserialization) {
 
     int numOfWordsBefore = *(trie->numOfWords);
 
-    TrieNode deserTrie = TrieNode::deserialize(documentsPath + "/testing_trie_serialization");
+    TrieNode* deserTrie = TrieNode::deserialize(documentsPath + "/testing_trie_serialization");
 
     std::remove((documentsPath + "/testing_trie_serialization").c_str() );
 
-    int numOfWordsAfter = *(deserTrie.numOfWords);
+    int numOfWordsAfter = *(deserTrie->numOfWords);
 
-    deserTrie.insert("one");
-    deserTrie.insert("two");
-    deserTrie.insert("three");
+    deserTrie->insert("one");
+    deserTrie->insert("two");
+    deserTrie->insert("three");
 
-    int numOfWordsAfterAfter = *(deserTrie.numOfWords);
+    int numOfWordsAfterAfter = *(deserTrie->numOfWords);
 
-    ASSERT_TRUE(deserTrie.check("testing"));
-    ASSERT_FALSE(deserTrie.check("tes"));
+    ASSERT_TRUE(deserTrie->check("testing"));
+    ASSERT_FALSE(deserTrie->check("tes"));
     ASSERT_EQ(numOfWordsBefore, numOfWordsAfter);
     ASSERT_EQ(numOfWordsAfter+3, numOfWordsAfterAfter);
 }
