@@ -26,6 +26,7 @@ include_directories(
   src/index/file/
   src/search/
   src/interface/
+  src/model/
 )
 
 find_package(Curses REQUIRED)

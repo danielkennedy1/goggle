@@ -1,3 +1,6 @@
+#ifndef MAXHEAP_HPP
+#define MAXHEAP_HPP
+
 #include "ArrayList.h"
 #include <cmath>
 
@@ -83,3 +86,5 @@ public:
         }
     }
 };
+
+#endif

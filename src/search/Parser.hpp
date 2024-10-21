@@ -3,14 +3,7 @@
 #include "ArrayList.h"
 #include "Trie.hpp"
 #include <stack>
-
-struct Argument {
-    Argument() : word(""), required(false), negated(false) {};
-    Argument(std::string word, bool required, bool negated) : word(word), required(required), negated(negated) {};
-    std::string word;
-    bool required;
-    bool negated;
-};
+#include "Argument.hpp"
 
 class Parser {
     public:

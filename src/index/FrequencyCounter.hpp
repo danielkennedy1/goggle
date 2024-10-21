@@ -1,21 +1,12 @@
 #ifndef FREQUENCYCOUNTER_H
 #define FREQUENCYCOUNTER_H
 #include <string>
-#include <utility>
-#include <iostream>
+
 #include "core/Trie.hpp"
 #include "ArrayList.h"
-#include "DocumentSet.hpp"
 #include "StringUtils.hpp"
+#include "Book.hpp"
 
-struct Book {
-    public:
-    Book() : name(""), contents(nullptr) {};
-    Book(std::string name, ArrayList<std::string>* contents) : name(name), path(path), contents(contents) {};
-    std::string name;
-    std::string path;
-    ArrayList<std::string>* contents;
-};
 
 class FrequencyCounter
 {

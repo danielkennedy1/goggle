@@ -148,9 +148,9 @@ public:
         std::cout << "Object serialized successfully." << std::endl;
     }
 
-  static TrieNode deserialize(const std::string& filename)
+  static TrieNode* deserialize(const std::string& filename)
     {
-        TrieNode node = TrieNode(0);
+        TrieNode* node = new TrieNode(0);
         std::ifstream file(filename, std::ios::binary);
         if (!file.is_open()) {
             std::cerr
@@ -159,7 +159,7 @@ public:
             return NULL;
         }
         file.read(reinterpret_cast<char*>(&node),
-                  sizeof(node));
+                  sizeof(&node));
         file.close();
         std::cout << "Object deserialized successfully." << std::endl;
         return node;
