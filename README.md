@@ -58,3 +58,4 @@ w{_x}{_,}{_y}=tf{_x}{_,}{_y} × log({N \over df_x})
 
 ## Run commands:
 - Daniel: `cmake --build .\build\ && .\build\Debug\goggle.exe`
+- Conor (Linux): `cd build && cmake .. && make && ctest && ./bin/google`
