@@ -4,7 +4,7 @@
 
 TEST(FileReaderTests, TestOutput_correct)
 {
-  FileReader *reader = new FileReader("../data/simple_documents/11 TestDoc.txt");
+  FileReader *reader = new FileReader("../data/simple_documents/11_TestDoc.txt");
   ArrayList<std::string>* words = reader->read();
 
   std::string expected_words[4] = {
@@ -23,7 +23,7 @@ TEST(FileReaderTests, TestOutput_correct)
 
 TEST(FileReaderTests, TestOutput_incorrect)
 {
-  FileReader *reader = new FileReader("../data/simple_documents/11 TestDoc.txt");
+  FileReader *reader = new FileReader("../data/simple_documents/11_TestDoc.txt");
   ArrayList<std::string>* words = reader->read();
 
   std::vector<std::string> expected_words = {
