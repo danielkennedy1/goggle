@@ -28,7 +28,6 @@ public:
            std::string book_lengths_location,
            std::string table_width_location) : 
         frequency_table_location(frequency_table_location), 
-        vocabTrie(Trie::deserialize(vocab_trie_location)),
         file_paths(new ArrayList<std::string>),
         file_lengths(new ArrayList<int>)
         {
