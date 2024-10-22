@@ -9,7 +9,6 @@
 #include "Parser.hpp"
 #include "Search.hpp"
 #include "StringUtils.hpp"
-#include "Trie.hpp"
 
 #define K 5
 
@@ -19,7 +18,7 @@ std::string bookPathsLocation = std::string(SERIALIZED_DATA_DIR) + std::string("
 std::string bookLengthsLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/book_lengths.txt");
 std::string tableWidthLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/table_width.txt");
 
-void search(Trie* vocabTrie) {
+void search() {
     std::string query;
 
     std::cout << "Please enter a search term. It can be multiple words "
@@ -35,7 +34,7 @@ void search(Trie* vocabTrie) {
 
     Search search(
         frequenciesTableLocation,
-        vocabTrie,
+        vocabTrieLocation,
         bookPathsLocation,
         bookLengthsLocation,
         tableWidthLocation);
@@ -56,21 +55,37 @@ void search(Trie* vocabTrie) {
     }
 }
 
-int main() {
-    Index index(GUTENBERG_DATA_DIR);
-    if (DEBUG) std::cout << "INDEX CREATED" << std::endl;
-    index.index();
-    if (DEBUG) std::cout << "INDEX INDEXED" << std::endl;
-    index.persist(
-        frequenciesTableLocation,
-        vocabTrieLocation,
-        bookPathsLocation,
-        bookLengthsLocation,
-        tableWidthLocation);
-    if (DEBUG) std::cout << "INDEX PERSISTED" << std::endl;
-    Autocomplete autocomplete(index.counter->getVocabTrie());
-    if (DEBUG) std::cout << "AUTOCOMPLETE CREATED" << std::endl;
-    autocomplete.start();
-    if (DEBUG) std::cout << "AUTOCOMPLETE STARTED" << std::endl;
-    search(index.counter->getVocabTrie());
-};
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        std::cerr << "Usage: " << argv[0] << " <index|autocomplete|search>" << std::endl;
+        return 1;
+    }
+
+    std::string arg = argv[1];
+
+    if (arg == "index") {
+        Index index(GUTENBERG_DATA_DIR);
+        index.index();
+
+        index.persist(
+            frequenciesTableLocation,
+            vocabTrieLocation,
+            bookPathsLocation,
+            bookLengthsLocation,
+            tableWidthLocation);
+
+    } else if (arg == "autocomplete") {
+        Trie* vocabTrie = new Trie();
+        vocabTrie->loadFrom(vocabTrieLocation);
+        Autocomplete autocomplete(vocabTrie);
+        autocomplete.start();
+    } else if (arg == "search") {
+        search();
+    } else {
+        std::cerr << "Invalid option: " << arg << std::endl;
+        std::cerr << "Valid options are: index, autocomplete, search" << std::endl;
+        return 1;
+    }
+
+    return 0;
+}

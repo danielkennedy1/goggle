@@ -43,6 +43,7 @@ public:
   };
 
   void update(int index, T element) {
+      std::cout << "updating index " << index << "with " << element << std::endl;
     try
     {
       if (index >= length) {
