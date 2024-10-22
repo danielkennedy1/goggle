@@ -16,8 +16,6 @@ class MaxHeap {
 public:
     MaxHeap() { array = new ArrayList<HeapNode<T>*>(); }
 
-    // TODO: There's a faster way to do it by shifting the replaced value down
-    // instead of this percolation
     void insert(T newValue, int priority) {
         array->append(new HeapNode<T>(newValue, priority));
         int childIndex = array->length - 1;
