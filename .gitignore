@@ -7,3 +7,4 @@ compile_commands.json
 .cache/
 data/serialized_data/
 data/gutenberg/
+.DS_STORE
