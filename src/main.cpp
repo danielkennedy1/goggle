@@ -20,7 +20,7 @@ std::string bookPathsLocation =
 std::string tableWidthLocation =
     std::string(SERIALIZED_DATA_DIR) + std::string("/table_width.txt");
 
-void search(TrieNode* vocabTrie) {
+void search(Trie* vocabTrie) {
     std::string query;
 
     std::cout << "Please enter a search term. It can be multiple words "

@@ -1,7 +1,6 @@
 #ifndef FREQUENCYCOUNTER_H
 #define FREQUENCYCOUNTER_H
 #include <string>
-
 #include "core/Trie.hpp"
 #include "ArrayList.h"
 #include "StringUtils.hpp"
@@ -16,9 +15,7 @@ public:
 
     FrequencyCounter(int numOfDocs) {
         numOfDocuments = numOfDocs;
-        *nextFreeIndex = 0;
-        *nextFreeIndexTitles = 0;
-        vocabularyTrie = new TrieNode(nextFreeIndex);
+        vocabularyTrie = new Trie();
         documents = new Book[numOfDocs];
         frequencyTable = new ArrayList<int>[numOfDocs];
     }
@@ -27,7 +24,6 @@ public:
         delete vocabularyTrie;
         delete[] frequencyTable;
         delete[] documents;
-        delete nextFreeIndex;
     }
 
     void addDocument(int docNum, ArrayList<std::string>* words, std::string path) {
@@ -40,6 +36,9 @@ public:
     void indexDocument(int docNum) {
         for(int i = 0; i < documents[docNum].contents->length; i++) {
             int index = vocabularyTrie->insert(documents[docNum].contents->get(i));
+            if (index == -1) {
+                continue;
+            }
             while (index >= frequencyTable[docNum].length) {
                 frequencyTable[docNum].append(0);
             }
@@ -48,14 +47,12 @@ public:
         }
     }
 
-    TrieNode* getVocabTrie() {return vocabularyTrie;}
+    Trie* getVocabTrie() {return vocabularyTrie;}
 
     ArrayList<int>* getFreqTable() {return frequencyTable;}
 
 private:
-    TrieNode* vocabularyTrie;
+    Trie* vocabularyTrie;
     ArrayList<int>* frequencyTable;
-    int* nextFreeIndex = new int;
-    int* nextFreeIndexTitles = new int;
 };
 #endif

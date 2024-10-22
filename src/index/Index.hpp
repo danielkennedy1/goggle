@@ -86,9 +86,7 @@ private:
     }
 
     void persist_vocab_trie(std::string vocab_trie_location) {
-        TrieNode* vocabTrie = counter->getVocabTrie();
-
-        std::cout << "Persist: " << *vocabTrie->numOfWords << std::endl;
+        Trie* vocabTrie = counter->getVocabTrie();
 
         vocabTrie->serialize(vocab_trie_location);
     }

@@ -115,7 +115,7 @@ class Parser {
 
   private:
   std::string rawQuery;
-  TrieNode* vocabTrie;
+  Trie* vocabTrie;
 };
 
 #endif

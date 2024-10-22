@@ -20,7 +20,7 @@ TEST(ParserTests, TestParseQueryAnd)
 
     ArrayList<int> documentFrequencies = counter.getFreqTable()[0];
 
-    TrieNode* vocabTrie = counter.getVocabTrie();
+    Trie* vocabTrie = counter.getVocabTrie();
 
     std::string query = "file aNd Data";
 
@@ -53,7 +53,7 @@ TEST(ParserTests, TestParseQueryOr)
 
     ArrayList<int> documentFrequencies = counter.getFreqTable()[0];
 
-    TrieNode* vocabTrie = counter.getVocabTrie();
+    Trie* vocabTrie = counter.getVocabTrie();
 
     std::string query = "file OR Data";
 
@@ -85,7 +85,7 @@ TEST(ParserTests, TestParseQueryNot)
 
     ArrayList<int> documentFrequencies = counter.getFreqTable()[0];
 
-    TrieNode* vocabTrie = counter.getVocabTrie();
+    Trie* vocabTrie = counter.getVocabTrie();
 
     std::string query = "not file OR Data";
 
