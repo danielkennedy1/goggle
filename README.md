@@ -105,3 +105,6 @@ In order to get the documents necessary for searching, use the bash script prese
 - Windows: `cmake --build .\build\ && .\build\Debug\goggle.exe`
 - Linux: `cd build && cmake .. && make && ctest && ./bin/google`
 
+- `goggle index`
+- `goggle autocomplete`
+- `goggle search`
