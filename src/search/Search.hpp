@@ -20,17 +20,18 @@ private:
     int tablewidth;
 
 public:
-    TrieNode* vocabTrie;
+    Trie* vocabTrie;
     // FIXME: This only works within the same process at the moment
     Search(std::string frequency_table_location,
            std::string vocab_trie_location,
            std::string book_paths_location,
            std::string book_lengths_location,
-           std::string table_width_location) : frequency_table_location(frequency_table_location),
-                                               vocabTrie(TrieNode::deserialize(vocab_trie_location)),
-                                               file_paths(new ArrayList<std::string>),
-                                               file_lengths(new ArrayList<int>) {
-
+           std::string table_width_location) : 
+        frequency_table_location(frequency_table_location), 
+        file_paths(new ArrayList<std::string>),
+        file_lengths(new ArrayList<int>)
+        {
+        vocabTrie->loadFrom(vocab_trie_location);
         std::ifstream paths_in(book_paths_location);
         std::string path;
         while (paths_in >> path) {
@@ -53,14 +54,15 @@ public:
     }
 
     Search(std::string frequency_table_location,
-           TrieNode* vocab_trie,
-           std::string book_paths_location,
-           std::string book_lengths_location,
-           std::string table_width_location) : frequency_table_location(frequency_table_location),
-                                               vocabTrie(vocab_trie),
-                                               file_paths(new ArrayList<std::string>),
-                                               file_lengths(new ArrayList<int>) {
-
+            Trie* vocab_trie,
+            std::string book_paths_location,
+            std::string book_lengths_location,
+            std::string table_width_location) : 
+        frequency_table_location(frequency_table_location), 
+        vocabTrie(vocab_trie),
+        file_paths(new ArrayList<std::string>),
+        file_lengths(new ArrayList<int>)
+        {
         std::ifstream paths_in(book_paths_location);
         std::string path;
         while (paths_in >> path) {

@@ -6,7 +6,7 @@ TEST(TrieTests, TestInsertionAndCheck)
 {
     int numOfWords = 0;
 
-    TrieNode *trie = new TrieNode(&numOfWords);
+    Trie *trie = new Trie();
 
     trie->insert("testing");
     trie->insert("testy");
@@ -22,10 +22,28 @@ TEST(TrieTests, TestInsertionAndCheck)
     ASSERT_FALSE(trie->check("there"));
 }
 
-TEST(TrieTests, TestSerializationDeserialization) {
+TEST(TrieTests, TestTrieWordsArrayList) {
     int numOfWords = 0;
 
-    TrieNode *trie = new TrieNode(&numOfWords);
+    Trie *trie = new Trie();
+
+    trie->insert("testing");
+    trie->insert("testy");
+    trie->insert("task");
+    trie->insert("talk");
+    trie->insert("testable");
+    trie->insert("the");
+
+    ArrayList<std::string> words = trie->words;
+
+    ASSERT_EQ(words[0], "testing");
+    ASSERT_EQ(words[2], "task");
+    ASSERT_EQ(words[4], "testable");
+    ASSERT_EQ(words[5], "the");
+}
+
+TEST(TrieTests, TestSerializationDeserialization) {
+    Trie *trie = new Trie();
 
     trie->insert("testing");
     trie->insert("testy");
@@ -43,23 +61,24 @@ TEST(TrieTests, TestSerializationDeserialization) {
     }
 
     trie->serialize(documentsPath + "/testing_trie_serialization");
-
     int numOfWordsBefore = *(trie->numOfWords);
+    delete trie;
 
-    TrieNode* deserTrie = TrieNode::deserialize(documentsPath + "/testing_trie_serialization");
+    Trie deserTrie;
+    deserTrie.loadFrom(documentsPath + "/testing_trie_serialization");
 
     std::remove((documentsPath + "/testing_trie_serialization").c_str() );
 
-    int numOfWordsAfter = *(deserTrie->numOfWords);
+    int numOfWordsAfter = *(deserTrie.numOfWords);
 
-    deserTrie->insert("one");
-    deserTrie->insert("two");
-    deserTrie->insert("three");
+    deserTrie.insert("one");
+    deserTrie.insert("two");
+    deserTrie.insert("three");
 
-    int numOfWordsAfterAfter = *(deserTrie->numOfWords);
+    int numOfWordsAfterAfter = *(deserTrie.numOfWords);
 
-    ASSERT_TRUE(deserTrie->check("testing"));
-    ASSERT_FALSE(deserTrie->check("tes"));
+    ASSERT_TRUE(deserTrie.check("testing"));
+    ASSERT_FALSE(deserTrie.check("tes"));
     ASSERT_EQ(numOfWordsBefore, numOfWordsAfter);
     ASSERT_EQ(numOfWordsAfter+3, numOfWordsAfterAfter);
 }
