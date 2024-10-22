@@ -1,3 +1,5 @@
+#ifndef STRINGUTILS_HPP
+#define STRINGUTILS_HPP
 #include <string>
 
 class StringUtils {
@@ -32,3 +34,5 @@ class StringUtils {
   }
   
 };
+
+#endif
