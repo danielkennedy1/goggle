@@ -35,9 +35,10 @@ public:
 
   ~TrieNode()
   {
-    // for (int i = 0; i < 26; i++) {
-    //   delete children[i];
-    // }
+    for (int i = 0; i < 26; i++)
+    {
+      delete children[i];
+    }
   }
 
   int insert(std::string word)
@@ -151,16 +152,14 @@ class Trie
 public:
   int *numOfWords = new int;
 
-  Trie()
+  Trie(int *numOfWords) : numOfWords(numOfWords)
   {
-    *numOfWords = 0;
     rootNode = new TrieNode(numOfWords);
   }
 
   ~Trie()
   {
-    // delete numOfWords;
-    // delete rootNode;
+    delete rootNode;
   }
 
   int insert(std::string word)
@@ -190,7 +189,7 @@ public:
 
   void serialize(std::string filePath)
   {
-    std::ofstream file(filePath);
+    std::ofstream file(filePath, std::ios::binary);
     if (!file.is_open())
     {
       std::cerr
@@ -198,7 +197,12 @@ public:
           << std::endl;
       return;
     }
-    for(int i = 0; i < words.length; i++) file << words[i] << " ";
+    for (int i = 0; i < words.length; i++)
+    {
+      file.write(reinterpret_cast<const char *>((words[i].c_str())),
+                 words[i].size());
+      file.write(" ", 1);
+    }
     file.close();
     std::cout << "Trie serialized successfully." << std::endl;
     return;
@@ -214,17 +218,34 @@ public:
           << std::endl;
       return;
     }
-
-    std::string word;
-    while (file >> word) this->insert(word);
+    char currentChar;
+    std::string currentWord;
+    while (!file.eof())
+    {
+      file.read(reinterpret_cast<char *>(&currentChar),
+                sizeof(currentChar));
+      if (currentChar == ' ')
+      {
+        if (currentWord.size() > 0)
+        {
+          this->insert(currentWord);
+          currentWord = "";
+        }
+        continue;
+      }
+      currentWord += currentChar;
+    }
 
     file.close();
+
     std::cout << "Trie deserialized successfully." << std::endl;
     return;
   }
 
   ArrayList<std::string> words;
   TrieNode *rootNode;
+
+private:
 };
 
 #endif // TRIE_H

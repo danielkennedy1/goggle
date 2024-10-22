@@ -39,13 +39,14 @@ void search() {
         bookLengthsLocation,
         tableWidthLocation);
 
-    ArrayList<Result*>* results = search.search(searchArgs, K);
+    ArrayList<Result *> *results = search.search(searchArgs, K);
 
     assert(results->length == K);
 
     std::cout << "Rank\tName\t(tf-idf score)\tPath" << std::endl;
 
-    for (int i = 0; i < results->length; i++) {
+    for (int i = 0; i < results->length; i++)
+    {
         std::cout
             << i + 1 << ":\t"
             << StringUtils::parseDocNameFromPath(results->get(i)->name) << "\t\t"
@@ -54,7 +55,7 @@ void search() {
             << std::endl;
     }
 }
-
+  
 int main(int argc, char* argv[]) {
     if (argc != 2) {
         std::cerr << "Usage: " << argv[0] << " <index|autocomplete|search>" << std::endl;

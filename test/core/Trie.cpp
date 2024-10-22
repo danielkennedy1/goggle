@@ -6,7 +6,7 @@ TEST(TrieTests, TestInsertionAndCheck)
 {
     int numOfWords = 0;
 
-    Trie *trie = new Trie();
+    Trie *trie = new Trie(&numOfWords);
 
     trie->insert("testing");
     trie->insert("testy");
@@ -16,7 +16,11 @@ TEST(TrieTests, TestInsertionAndCheck)
     trie->insert("the");
 
     ASSERT_TRUE(trie->check("testing"));
+    ASSERT_TRUE(trie->check("testing")->wordIndex == 0);
+    ASSERT_TRUE(trie->check("testy"));
+    ASSERT_TRUE(trie->check("testy")->wordIndex == 1);
     ASSERT_TRUE(trie->check("task"));
+    ASSERT_TRUE(trie->check("task")->wordIndex == 2);
     ASSERT_FALSE(trie->check("test"));
     ASSERT_FALSE(trie->check("abc"));
     ASSERT_FALSE(trie->check("there"));
@@ -26,7 +30,7 @@ TEST(TrieTests, TestTrieWordsArrayList)
 {
     int numOfWords = 0;
 
-    Trie *trie = new Trie();
+    Trie *trie = new Trie(&numOfWords);
 
     trie->insert("testing");
     trie->insert("testy");
@@ -45,7 +49,8 @@ TEST(TrieTests, TestTrieWordsArrayList)
 
 TEST(TrieTests, TestSerializationDeserialization)
 {
-    Trie *trie = new Trie();
+    int numOfWords = 0;
+    Trie *trie = new Trie(&numOfWords);
 
     trie->insert("testing");
     trie->insert("testy");
@@ -67,21 +72,34 @@ TEST(TrieTests, TestSerializationDeserialization)
     int numOfWordsBefore = *(trie->numOfWords);
     delete trie;
 
-    Trie deserTrie;
-    deserTrie.loadFrom(documentsPath + "/testing_trie_serialization");
+    int numOfWords2 = 0;
 
-    std::remove((documentsPath + "/testing_trie_serialization").c_str());
+    Trie *deserTrie = new Trie(&numOfWords2);
+    deserTrie->loadFrom(documentsPath + "/testing_trie_serialization");
 
-    int numOfWordsAfter = *(deserTrie.numOfWords);
+    int numOfWordsAfter = *(deserTrie->numOfWords);
 
-    deserTrie.insert("one");
-    deserTrie.insert("two");
-    deserTrie.insert("three");
+    deserTrie->insert("one");
+    deserTrie->insert("two");
+    deserTrie->insert("three");
 
-    int numOfWordsAfterAfter = *(deserTrie.numOfWords);
+    int numOfWordsAfterAfter = *(deserTrie->numOfWords);
 
-    ASSERT_TRUE(deserTrie.check("testing"));
-    ASSERT_FALSE(deserTrie.check("tes"));
+    std::cout << deserTrie->check("testing")->wordIndex << std::endl;
+    std::cout << deserTrie->check("testy")->wordIndex << std::endl;
+    std::cout << deserTrie->check("task")->wordIndex << std::endl;
+
+    ASSERT_TRUE(deserTrie->check("testing"));
+    ASSERT_EQ(deserTrie->check("testing")->wordIndex, 0);
+    ASSERT_TRUE(deserTrie->check("testy"));
+    ASSERT_EQ(deserTrie->check("testy")->wordIndex, 1);
+    ASSERT_TRUE(deserTrie->check("testable"));
+    ASSERT_EQ(deserTrie->check("testable")->wordIndex, 4);
+    ASSERT_TRUE(deserTrie->check("one"));
+    ASSERT_TRUE(deserTrie->check("two"));
+    ASSERT_TRUE(deserTrie->check("three"));
+    ASSERT_EQ(deserTrie->check("three")->wordIndex, 7);
+    ASSERT_FALSE(deserTrie->check("tes"));
     ASSERT_EQ(numOfWordsBefore, numOfWordsAfter);
     ASSERT_EQ(numOfWordsAfter + 3, numOfWordsAfterAfter);
 }
