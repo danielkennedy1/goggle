@@ -9,6 +9,7 @@
 #include "Parser.hpp"
 #include "Search.hpp"
 #include "StringUtils.hpp"
+#include "Trie.hpp"
 
 #define K 5
 
@@ -33,9 +34,15 @@ void search()
 
     ArrayList<Argument> searchArgs = parser.parse();
 
+    int why_did_we_do_it_this_way = 0;
+
+    Trie* vocabTrie = new Trie(&why_did_we_do_it_this_way);
+
+    vocabTrie->loadFrom(vocabTrieLocation);
+
     Search search(
         frequenciesTableLocation,
-        vocabTrieLocation,
+        vocabTrie,
         bookPathsLocation,
         bookLengthsLocation,
         tableWidthLocation);

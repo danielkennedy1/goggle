@@ -65,7 +65,7 @@ public:
       *numOfWords = (int)*numOfWords + 1;
       return currentNode->wordIndex;
     }
-    return -1;
+    return currentNode->wordIndex;
   };
 
   ArrayList<std::string> recursiveAutocomplete(TrieNode *currentNode, std::string currentWord)

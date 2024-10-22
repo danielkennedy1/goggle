@@ -23,14 +23,14 @@ private:
 public:
     Trie* vocabTrie;
     Search(std::string frequency_table_location,
-           std::string vocab_trie_location,
+           Trie* vocab_trie,
            std::string book_paths_location,
            std::string book_lengths_location,
            std::string table_width_location) : frequency_table_location(frequency_table_location),
                                                file_paths(new ArrayList<std::string>),
-                                               file_lengths(new ArrayList<int>)
+                                               file_lengths(new ArrayList<int>),
+                                               vocabTrie(vocab_trie)
     {
-        vocabTrie->loadFrom(vocab_trie_location);
         std::ifstream paths_in(book_paths_location);
         std::string path;
         while (paths_in >> path)
@@ -55,16 +55,6 @@ public:
     }
 
     ArrayList<Result*>* search(ArrayList<Argument> searchArgs, int k) {
-
-        std::cout << "ARGUMENTS: " << std::endl;
-
-        for (int i = 0; i < searchArgs.length; i++)
-        {
-            std::cout << "ARGUMENT " << i + 1 << std::endl;
-            std::cout << "term:" << searchArgs[i].word << std::endl;
-            std::cout << "required:" << searchArgs[i].required << std::endl;
-            std::cout << "negated:" << searchArgs[i].negated << std::endl;
-        }
 
         std::ifstream frequencyTableFile(frequency_table_location, std::ios::binary);
 
@@ -97,8 +87,6 @@ public:
                     continue;
                 }
 
-                // std::cout << node->wordIndex << std::endl;
-
                 int frequency;
                 frequencyTableFile.seekg((document_index * tablewidth + node->wordIndex) * sizeof(int), std::ios::beg);
                 frequencyTableFile.read(reinterpret_cast<char *>(&frequency), sizeof(int));
@@ -118,7 +106,6 @@ public:
         MaxHeap<Result *> results;
         for (int i = 0; i < file_paths->length; i++)
         {
-            std::cout << "Document: " << file_paths->get(i);
             bool zero_flag = false;
             double score = 0;
             for (int argument_index = 0; argument_index < searchArgs.length; argument_index++)
@@ -138,12 +125,8 @@ public:
                 }
             }
 
-            std::cout << " zero_flag = " << zero_flag << std::endl;
-
             if (zero_flag)
                 score = 0;
-
-            std::cout << "score = " << score << std::endl;
 
             results.insert(new Result(file_paths->get(i), score), score * 10e7);
         }

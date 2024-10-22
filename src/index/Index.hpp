@@ -81,7 +81,6 @@ private:
         ArrayList<int>* frequencies = counter->getFreqTable();
 
         for (int i = 0; i < numOfDocuments; i++) {
-            std::cout << "table_width loop" << std::endl;
             if (frequencies[i].length > table_width) {
                 table_width = frequencies[i].length;
                 if (DEBUG) std::cout << "new table width of " << table_width << " from doc index " << i << std::endl;
