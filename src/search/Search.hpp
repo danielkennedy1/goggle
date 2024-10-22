@@ -15,12 +15,12 @@ class Search
 {
 
 private:
-    ArrayList<std::string> *file_paths;
-    ArrayList<int> *file_lengths;
     std::string frequency_table_location;
     int tablewidth;
 
 public:
+    ArrayList<std::string> *file_paths;
+    ArrayList<int> *file_lengths;
     Trie* vocabTrie;
     Search(std::string frequency_table_location,
            Trie* vocab_trie,
@@ -54,7 +54,7 @@ public:
         lengths_in.close();
     }
 
-    ArrayList<Result*>* search(ArrayList<Argument> searchArgs, int k) {
+    ArrayList<Result*>* search(ArrayList<Argument> searchArgs) {
 
         std::ifstream frequencyTableFile(frequency_table_location, std::ios::binary);
 
@@ -135,7 +135,7 @@ public:
 
         ArrayList<Result *> *returnValue = new ArrayList<Result *>();
 
-        for (int i = 0; i < k; i++)
+        for (int i = 0; i < file_paths->length; i++)
         {
             returnValue->append(results.max());
         }
