@@ -42,7 +42,6 @@ public:
 
   int insert(std::string word)
   {
-    std::cout << "node insert. word = " << word << std::endl;
     TrieNode *currentNode = this;
     for (int i = 0; i < word.size(); i++)
     {
@@ -166,16 +165,13 @@ public:
 
   int insert(std::string word)
   {
-      std::cout << "insert: " << word << std::endl;
     int index = rootNode->insert(word);
-    std::cout << "index: " << index << std::endl;
     if (index == -1)
     {
       return index;
     }
     while (index >= words.length)
     {
-        std::cout << "in while" << std::endl;
       words.append("\0");
     }
     words.update(index, word);
