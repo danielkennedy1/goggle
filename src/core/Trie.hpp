@@ -190,8 +190,7 @@ public:
 
   void serialize(std::string filePath)
   {
-    std::string stringRepresentation = getWordsSerializedAsString();
-    std::ofstream file(filePath, std::ios::binary);
+    std::ofstream file(filePath);
     if (!file.is_open())
     {
       std::cerr
@@ -199,21 +198,15 @@ public:
           << std::endl;
       return;
     }
-    int string_size = stringRepresentation.size();
-    file.write(reinterpret_cast<const char *>(&string_size),
-               sizeof(string_size));
-    const char *c_string = stringRepresentation.c_str();
-    file.write(reinterpret_cast<const char *>(c_string),
-               (stringRepresentation.length()));
+    for(int i = 0; i < words.length; i++) file << words[i] << " ";
     file.close();
     std::cout << "Trie serialized successfully." << std::endl;
-
     return;
   }
 
   void loadFrom(std::string filePath)
   {
-    std::ifstream file(filePath, std::ios::binary);
+    std::ifstream file(filePath);
     if (!file.is_open())
     {
       std::cerr
@@ -221,71 +214,17 @@ public:
           << std::endl;
       return;
     }
-    int string_size;
-    file.read(reinterpret_cast<char *>(&string_size),
-              sizeof(string_size));
-    char *data = new char[string_size];
 
-    file.read(data,
-              string_size);
+    std::string word;
+    while (file >> word) this->insert(word);
 
     file.close();
-
-    deserializeWordsFromString(data, string_size);
-
     std::cout << "Trie deserialized successfully." << std::endl;
-
     return;
   }
 
   ArrayList<std::string> words;
   TrieNode *rootNode;
-
-private:
-  std::string getWordsSerializedAsString()
-  {
-    std::string value = "";
-    for (int i = 0; i < words.length; i++)
-    {
-      std::string word = words[i];
-      value += std::to_string(word.length()) + "~" + word;
-    }
-    return value;
-  }
-
-  std::string convertToString(const char *a, int size)
-  {
-    int i;
-    std::string s = "";
-    for (i = 0; i < size; i++)
-    {
-      s = s + a[i];
-    }
-    return s;
-  }
-
-  void deserializeWordsFromString(const char *data, int dataLength)
-  {
-    int pos = 0;
-    std::string dataAsStr = convertToString(data, dataLength);
-    while (pos < dataLength)
-    {
-      int lenPos = dataAsStr.find('~', pos);
-      if (lenPos == std::string::npos)
-      {
-        break;
-      }
-
-      int length = std::stoi(dataAsStr.substr(pos, lenPos - pos));
-      pos = lenPos + 1;
-
-      std::string word = dataAsStr.substr(pos, length);
-      std::cout << word << std::endl;
-      this->rootNode->insert(word);
-
-      pos += length;
-    }
-  }
 };
 
 #endif // TRIE_H
