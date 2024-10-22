@@ -12,7 +12,7 @@ class Autocomplete {
             initscr();
             noecho();
 
-            printw("Welcome to the Goggle autocomplete \"Repl\"! Start typing and see to see suggestions appear! (Ctrl D to exit)");
+            printw("Welcome to Goggle autocomplete! Start typing and see to see suggestions appear! (Ctrl D to exit)");
 
             ArrayList<std::string> wordSuggestions;
 
