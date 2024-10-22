@@ -22,7 +22,8 @@ TEST(TrieTests, TestInsertionAndCheck)
     ASSERT_FALSE(trie->check("there"));
 }
 
-TEST(TrieTests, TestTrieWordsArrayList) {
+TEST(TrieTests, TestTrieWordsArrayList)
+{
     int numOfWords = 0;
 
     Trie *trie = new Trie();
@@ -42,7 +43,8 @@ TEST(TrieTests, TestTrieWordsArrayList) {
     ASSERT_EQ(words[5], "the");
 }
 
-TEST(TrieTests, TestSerializationDeserialization) {
+TEST(TrieTests, TestSerializationDeserialization)
+{
     Trie *trie = new Trie();
 
     trie->insert("testing");
@@ -53,10 +55,11 @@ TEST(TrieTests, TestSerializationDeserialization) {
 
     std::filesystem::path filepath = std::string(SERIALIZED_DATA_DIR);
     bool filepathExists = std::filesystem::is_directory(filepath);
-    
+
     std::string documentsPath = SERIALIZED_DATA_DIR;
-    
-    if(!filepathExists) {
+
+    if (!filepathExists)
+    {
         std::filesystem::create_directory(filepath);
     }
 
@@ -67,7 +70,7 @@ TEST(TrieTests, TestSerializationDeserialization) {
     Trie deserTrie;
     deserTrie.loadFrom(documentsPath + "/testing_trie_serialization");
 
-    std::remove((documentsPath + "/testing_trie_serialization").c_str() );
+    std::remove((documentsPath + "/testing_trie_serialization").c_str());
 
     int numOfWordsAfter = *(deserTrie.numOfWords);
 
@@ -80,5 +83,5 @@ TEST(TrieTests, TestSerializationDeserialization) {
     ASSERT_TRUE(deserTrie.check("testing"));
     ASSERT_FALSE(deserTrie.check("tes"));
     ASSERT_EQ(numOfWordsBefore, numOfWordsAfter);
-    ASSERT_EQ(numOfWordsAfter+3, numOfWordsAfterAfter);
+    ASSERT_EQ(numOfWordsAfter + 3, numOfWordsAfterAfter);
 }

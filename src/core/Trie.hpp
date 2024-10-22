@@ -9,9 +9,9 @@ class TrieNode
 {
 public:
   int wordIndex;
-  int* numOfWords;
+  int *numOfWords;
 
-  TrieNode(char value, int* numOfWords)
+  TrieNode(char value, int *numOfWords)
   {
     for (int i = 0; i < 26; i++)
     {
@@ -22,8 +22,7 @@ public:
     this->numOfWords = numOfWords;
   };
 
-
-  TrieNode(int* numOfWords)
+  TrieNode(int *numOfWords)
   {
     for (int i = 0; i < 26; i++)
     {
@@ -34,7 +33,8 @@ public:
     this->numOfWords = numOfWords;
   }
 
-  ~TrieNode() {
+  ~TrieNode()
+  {
     // for (int i = 0; i < 26; i++) {
     //   delete children[i];
     // }
@@ -52,14 +52,14 @@ public:
       }
       else
       {
-        currentNode->children[index]
-            = new TrieNode(
-                    word[i], 
-                    numOfWords);
+        currentNode->children[index] = new TrieNode(
+            word[i],
+            numOfWords);
         currentNode = currentNode->children[index];
       }
     }
-    if (currentNode->wordIndex == -1) {
+    if (currentNode->wordIndex == -1)
+    {
       currentNode->wordIndex = *numOfWords;
       *numOfWords = (int)*numOfWords + 1;
       return currentNode->wordIndex;
@@ -79,7 +79,8 @@ public:
       if (currentNode->children[i])
       {
         ArrayList<std::string> returnVal = recursiveAutocomplete(currentNode->children[i], currentWord + currentNode->nodeValue);
-        for (int i = 0; i < returnVal.length; i++) {
+        for (int i = 0; i < returnVal.length; i++)
+        {
           words.append(returnVal[i]);
         }
       }
@@ -101,7 +102,8 @@ public:
       }
       return words;
     }
-    if (searchOrigin->wordIndex != -1) {
+    if (searchOrigin->wordIndex != -1)
+    {
       words.append(word);
     }
     for (int i = 0; i < 26; i++)
@@ -109,7 +111,8 @@ public:
       if (searchOrigin->children[i])
       {
         ArrayList<std::string> returnVal = recursiveAutocomplete(searchOrigin->children[i], word);
-        for (int i = 0; i < returnVal.length; i++) {
+        for (int i = 0; i < returnVal.length; i++)
+        {
           words.append(returnVal[i]);
         }
       }
@@ -124,11 +127,11 @@ public:
     {
       int index = word[i] - 'a';
       if (currentNode->children[index])
-        {
-          currentNode = currentNode->children[index];
-          continue;
-        }
-        return nullptr;
+      {
+        currentNode = currentNode->children[index];
+        continue;
+      }
+      return nullptr;
     }
     if (currentNode->wordIndex != -1)
     {
@@ -138,85 +141,97 @@ public:
   }
 
   char nodeValue;
+
 private:
   TrieNode *children[26];
 };
 
+class Trie
+{
+public:
+  int *numOfWords = new int;
 
-class Trie {
-  public:
-
-  int* numOfWords = new int;
-
-  Trie() {
+  Trie()
+  {
     *numOfWords = 0;
     rootNode = new TrieNode(numOfWords);
   }
 
-  ~Trie() {
+  ~Trie()
+  {
     // delete numOfWords;
     // delete rootNode;
   }
 
-  int insert(std::string word) {
+  int insert(std::string word)
+  {
     int index = rootNode->insert(word);
-    if (index == -1) {
-        return index;
+    if (index == -1)
+    {
+      return index;
     }
-    while (index >= words.length) {
-        words.append("\0");
+    while (index >= words.length)
+    {
+      words.append("\0");
     }
     words.update(index, word);
     return index;
   }
 
-  ArrayList<std::string> autocomplete(std::string word) {
+  ArrayList<std::string> autocomplete(std::string word)
+  {
     return rootNode->autocomplete(word);
   }
 
-  TrieNode* check(std::string word) {
+  TrieNode *check(std::string word)
+  {
     return rootNode->check(word);
   }
 
-  void serialize(std::string filePath) {
+  void serialize(std::string filePath)
+  {
     std::string stringRepresentation = getWordsSerializedAsString();
     std::ofstream file(filePath, std::ios::binary);
-      if (!file.is_open()) {
-          std::cerr
-              << "Error: Failed to open file for writing."
-              << std::endl;
-          return;
-      }
-      int string_size = stringRepresentation.size();
-      file.write(reinterpret_cast<const char*>(&string_size),
-                  sizeof(string_size));
-      const char* c_string = stringRepresentation.c_str();
-      file.write(reinterpret_cast<const char*>(&c_string),
-                  sizeof(c_string));
-      file.close();
-      std::cout << "Trie serialized successfully." << std::endl;
-
+    if (!file.is_open())
+    {
+      std::cerr
+          << "Error: Failed to open file for writing."
+          << std::endl;
       return;
+    }
+    int string_size = stringRepresentation.size();
+    file.write(reinterpret_cast<const char *>(&string_size),
+               sizeof(string_size));
+    const char *c_string = stringRepresentation.c_str();
+    file.write(reinterpret_cast<const char *>(c_string),
+               (stringRepresentation.length()));
+    file.close();
+    std::cout << "Trie serialized successfully." << std::endl;
+
+    return;
   }
 
-  void loadFrom(std::string filePath) {
-    const char* stringifiedSerializedData;
+  void loadFrom(std::string filePath)
+  {
     std::ifstream file(filePath, std::ios::binary);
-    if (!file.is_open()) {
-        std::cerr
-            << "Error: Failed to open file for reading."
-            << std::endl;
-        return;
+    if (!file.is_open())
+    {
+      std::cerr
+          << "Error: Failed to open file for reading."
+          << std::endl;
+      return;
     }
     int string_size;
-    file.read(reinterpret_cast<char*>(&string_size),
+    file.read(reinterpret_cast<char *>(&string_size),
               sizeof(string_size));
+    char *data = new char[string_size];
 
-    file.read(reinterpret_cast<char*>(&stringifiedSerializedData),
-              string_size*4);
+    file.read(data,
+              string_size);
+
     file.close();
 
-    deserializeWordsFromString(stringifiedSerializedData, string_size);
+    deserializeWordsFromString(data, string_size);
 
     std::cout << "Trie deserialized successfully." << std::endl;
 
@@ -224,43 +239,53 @@ class Trie {
   }
 
   ArrayList<std::string> words;
-  TrieNode* rootNode;
+  TrieNode *rootNode;
 
-  private:
-  std::string getWordsSerializedAsString() {
-    std::string value = "                    ";
-    for (int i = 0; i < words.length; i++) {
-        std::string word = words[i];
-        value += std::to_string(word.length()) + "~" + word;
+private:
+  std::string getWordsSerializedAsString()
+  {
+    std::string value = "";
+    for (int i = 0; i < words.length; i++)
+    {
+      std::string word = words[i];
+      value += std::to_string(word.length()) + "~" + word;
     }
     return value;
-  } 
-
-  std::string convertToString(const char* a, int size) {
-      int i;
-      std::string s = "";
-      for (i = 0; i < size; i++) {
-          s = s + a[i];
-      }
-      return s;
   }
 
-  void deserializeWordsFromString(const char* data, int dataLength) {
-    int pos = 20;
-    std::string dataAsStr = convertToString(data, dataLength);
-    while (pos < dataLength) {
-        int lenPos = dataAsStr.find('~', pos);
-        if (lenPos == std::string::npos) break;
-
-        int length = std::stoi(dataAsStr.substr(pos, lenPos - pos));
-        pos = lenPos + 1;
-
-        std::string word = dataAsStr.substr(pos, length);        
-        this->rootNode->insert(word);
-
-        pos += length;
+  std::string convertToString(const char *a, int size)
+  {
+    int i;
+    std::string s = "";
+    for (i = 0; i < size; i++)
+    {
+      s = s + a[i];
     }
-  } 
+    return s;
+  }
+
+  void deserializeWordsFromString(const char *data, int dataLength)
+  {
+    int pos = 0;
+    std::string dataAsStr = convertToString(data, dataLength);
+    while (pos < dataLength)
+    {
+      int lenPos = dataAsStr.find('~', pos);
+      if (lenPos == std::string::npos)
+      {
+        break;
+      }
+
+      int length = std::stoi(dataAsStr.substr(pos, lenPos - pos));
+      pos = lenPos + 1;
+
+      std::string word = dataAsStr.substr(pos, length);
+      std::cout << word << std::endl;
+      this->rootNode->insert(word);
+
+      pos += length;
+    }
+  }
 };
 
 #endif // TRIE_H
