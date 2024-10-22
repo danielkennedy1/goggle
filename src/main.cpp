@@ -18,7 +18,8 @@ std::string bookPathsLocation = std::string(SERIALIZED_DATA_DIR) + std::string("
 std::string bookLengthsLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/book_lengths.txt");
 std::string tableWidthLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/table_width.txt");
 
-void search() {
+void search()
+{
     std::string query;
 
     std::cout << "Please enter a search term. It can be multiple words "
@@ -55,16 +56,19 @@ void search() {
             << std::endl;
     }
 }
-  
-int main(int argc, char* argv[]) {
-    if (argc != 2) {
+
+int main(int argc, char *argv[])
+{
+    if (argc != 2)
+    {
         std::cerr << "Usage: " << argv[0] << " <index|autocomplete|search>" << std::endl;
         return 1;
     }
 
     std::string arg = argv[1];
 
-    if (arg == "index") {
+    if (arg == "index")
+    {
         Index index(GUTENBERG_DATA_DIR);
         index.index();
 
@@ -74,15 +78,21 @@ int main(int argc, char* argv[]) {
             bookPathsLocation,
             bookLengthsLocation,
             tableWidthLocation);
-
-    } else if (arg == "autocomplete") {
-        Trie* vocabTrie = new Trie();
+    }
+    else if (arg == "autocomplete")
+    {
+        int numOfWords = 0;
+        Trie *vocabTrie = new Trie(&numOfWords);
         vocabTrie->loadFrom(vocabTrieLocation);
         Autocomplete autocomplete(vocabTrie);
         autocomplete.start();
-    } else if (arg == "search") {
+    }
+    else if (arg == "search")
+    {
         search();
-    } else {
+    }
+    else
+    {
         std::cerr << "Invalid option: " << arg << std::endl;
         std::cerr << "Valid options are: index, autocomplete, search" << std::endl;
         return 1;
