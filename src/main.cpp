@@ -51,14 +51,13 @@ void search()
 
     assert(results->length == K);
 
-    std::cout << "Rank\tName\t(tf-idf score)\tPath" << std::endl;
+    std::cout << "Rank: Score (Calculated from TF-IDF) - Path" << std::endl;
 
     for (int i = 0; i < results->length; i++)
     {
         std::cout
-            << i + 1 << ":\t"
-            << StringUtils::parseDocNameFromPath(results->get(i)->name) << "\t\t"
-            << "(" << results->get(i)->score << ")\t"
+            << i+1 << "; "
+            << results->get(i)->score << " - "
             << results->get(i)->name
             << std::endl;
     }
