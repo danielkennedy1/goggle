@@ -5,8 +5,8 @@
 
 struct Result {
     std::string name;
-    int score;
-    Result(std::string name, int score) : name(name), score(score) {}
+    double score;
+    Result(std::string name, double score) : name(name), score(score) {}
 };
 
 #endif

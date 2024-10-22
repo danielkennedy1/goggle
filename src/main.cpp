@@ -1,3 +1,4 @@
+#include <cassert>
 #include <iostream>
 #include <ostream>
 #include <string>
@@ -7,18 +8,16 @@
 #include "Index.hpp"
 #include "Parser.hpp"
 #include "Search.hpp"
+#include "StringUtils.hpp"
 #include "Trie.hpp"
 
 #define K 5
 
-std::string frequenciesTableLocation =
-    std::string(SERIALIZED_DATA_DIR) + std::string("/frequencies_table.bin");
-std::string vocabTrieLocation =
-    std::string(SERIALIZED_DATA_DIR) + std::string("/vocab_trie.bin");
-std::string bookPathsLocation =
-    std::string(SERIALIZED_DATA_DIR) + std::string("/book_paths.txt");
-std::string tableWidthLocation =
-    std::string(SERIALIZED_DATA_DIR) + std::string("/table_width.txt");
+std::string frequenciesTableLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/frequencies_table.bin");
+std::string vocabTrieLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/vocab_trie.bin");
+std::string bookPathsLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/book_paths.txt");
+std::string bookLengthsLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/book_lengths.txt");
+std::string tableWidthLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/table_width.txt");
 
 void search(Trie* vocabTrie) {
     std::string query;
@@ -34,20 +33,44 @@ void search(Trie* vocabTrie) {
 
     ArrayList<Argument> searchArgs = parser.parse();
 
-    Search search(frequenciesTableLocation, vocabTrie,
-                  bookPathsLocation, tableWidthLocation);
+    Search search(
+        frequenciesTableLocation,
+        vocabTrie,
+        bookPathsLocation,
+        bookLengthsLocation,
+        tableWidthLocation);
 
-    search.search(searchArgs, K);
-    
+    ArrayList<Result*>* results = search.search(searchArgs, K);
+
+    assert(results->length == K);
+
+    std::cout << "Rank\tName\t(tf-idf score)\tPath" << std::endl;
+
+    for (int i = 0; i < results->length; i++) {
+        std::cout
+            << i + 1 << ":\t"
+            << StringUtils::parseDocNameFromPath(results->get(i)->name) << "\t\t"
+            << "(" << results->get(i)->score << ")\t"
+            << results->get(i)->name
+            << std::endl;
+    }
 }
 
 int main() {
     Index index(GUTENBERG_DATA_DIR);
+    if (DEBUG) std::cout << "INDEX CREATED" << std::endl;
     index.index();
-    index.persist(frequenciesTableLocation, vocabTrieLocation,
-                  bookPathsLocation, tableWidthLocation);
+    if (DEBUG) std::cout << "INDEX INDEXED" << std::endl;
+    index.persist(
+        frequenciesTableLocation,
+        vocabTrieLocation,
+        bookPathsLocation,
+        bookLengthsLocation,
+        tableWidthLocation);
+    if (DEBUG) std::cout << "INDEX PERSISTED" << std::endl;
     Autocomplete autocomplete(index.counter->getVocabTrie());
+    if (DEBUG) std::cout << "AUTOCOMPLETE CREATED" << std::endl;
     autocomplete.start();
-    std::cout << "INDEX FINISHED" << std::endl;
+    if (DEBUG) std::cout << "AUTOCOMPLETE STARTED" << std::endl;
     search(index.counter->getVocabTrie());
 };

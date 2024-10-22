@@ -1,6 +1,7 @@
 #ifndef SEARCH_HPP
 #define SEARCH_HPP
 
+#include <fstream>
 #include <string>
 
 #include "ArrayList.h"
@@ -14,6 +15,7 @@ class Search {
 
 private:
     ArrayList<std::string>* file_paths;
+    ArrayList<int>* file_lengths;
     std::string frequency_table_location;
     int tablewidth;
 
@@ -23,10 +25,12 @@ public:
     Search(std::string frequency_table_location,
            std::string vocab_trie_location,
            std::string book_paths_location,
+           std::string book_lengths_location,
            std::string table_width_location) : 
         frequency_table_location(frequency_table_location), 
-        // vocabTrie(Trie::deserialize(vocab_trie_location)),
-        file_paths(new ArrayList<std::string>)
+        vocabTrie(Trie::deserialize(vocab_trie_location)),
+        file_paths(new ArrayList<std::string>),
+        file_lengths(new ArrayList<int>)
         {
         vocabTrie->loadFrom(vocab_trie_location);
         std::ifstream paths_in(book_paths_location);
@@ -40,15 +44,25 @@ public:
         std::string table_width_str;
         table_width_file >> table_width_str;
         tablewidth = std::stoi(table_width_str);
+        table_width_file.close();
+
+        std::ifstream lengths_in(book_lengths_location);
+        std::string length;
+        while (lengths_in >> length) {
+            file_lengths->append(std::stoi(length));
+        }
+        lengths_in.close();
     }
 
     Search(std::string frequency_table_location,
             Trie* vocab_trie,
-           std::string book_paths_location,
-           std::string table_width_location) : 
+            std::string book_paths_location,
+            std::string book_lengths_location,
+            std::string table_width_location) : 
         frequency_table_location(frequency_table_location), 
         vocabTrie(vocab_trie),
-        file_paths(new ArrayList<std::string>)
+        file_paths(new ArrayList<std::string>),
+        file_lengths(new ArrayList<int>)
         {
 
         std::ifstream paths_in(book_paths_location);
@@ -62,42 +76,61 @@ public:
         std::string table_width_str;
         table_width_file >> table_width_str;
         tablewidth = std::stoi(table_width_str);
+
+        std::ifstream lengths_in(book_lengths_location);
+        std::string length;
+        while (lengths_in >> length) {
+            file_lengths->append(std::stoi(length));
+        }
+        lengths_in.close();
     }
     
-    void search(ArrayList<Argument> searchArgs, int k) {
+    // FIXME: put in negation logic here
+    ArrayList<Result*>* search(ArrayList<Argument> searchArgs, int k) {
 
-        std::ifstream frequencyTableFile(frequency_table_location,
-                                         std::ios::binary);
+        std::ifstream frequencyTableFile(frequency_table_location, std::ios::binary);
+
         int frequency;
-        MaxHeap<Result*> results;
+        ArrayList<int> frequencies;
 
-        for (int document_index = 0; document_index < file_paths->length;
-             document_index++) {
+        int documents_with_term = 0;
+
+        for (int document_index = 0; document_index < file_paths->length; document_index++) {
             std::string documentName = file_paths->get(document_index);
+            int documentLength = file_lengths->get(document_index);
             int score = 0;
-            for (int j = 0; j < searchArgs.length; j++) {
-                TrieNode* node = vocabTrie->check(searchArgs[j].word);
-                if (node == nullptr) {
-                    continue;
-                }
-                frequencyTableFile.seekg(
-                    (document_index * tablewidth + node->wordIndex) *
-                        sizeof(int),
-                    std::ios::beg);
-                frequencyTableFile.read(reinterpret_cast<char*>(&frequency),
-                                        sizeof(int));
+            std::string term = searchArgs[0].word;
+            TrieNode* node = vocabTrie->check(term);
 
-                score += frequency;
+            if (node == nullptr) {
+                continue;
             }
-            results.insert(new Result(documentName, score), score);
+
+            frequencyTableFile.seekg((document_index * tablewidth + node->wordIndex) * sizeof(int), std::ios::beg);
+            frequencyTableFile.read(reinterpret_cast<char*>(&frequency), sizeof(int));
+
+            frequencies.append(frequency);
+
+            if (frequency > 0) documents_with_term++;
+        }
+
+        MaxHeap<Result*> results;
+        
+        double idf = log10((static_cast<double>(file_paths->length)) / static_cast<double>(1 + documents_with_term));
+
+        for (int i = 0; i < file_paths->length; i++) {
+            double tf = static_cast<double>(frequencies.get(i)) / static_cast<double>(file_lengths->get(i));
+            results.insert(new Result(file_paths->get(i), tf * idf), (tf * idf) * 10e7);
         }
 
         frequencyTableFile.close();
 
+        ArrayList<Result*>* returnValue = new ArrayList<Result*>();        
+
         for (int i = 0; i < k; i++) {
-            Result* result = results.max();
-            std::cout << result->name << ": " << result->score << std::endl;
+            returnValue->append(results.max());
         }
+        return returnValue;
     }
 };
 
