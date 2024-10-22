@@ -19,7 +19,8 @@ std::string bookPathsLocation = std::string(SERIALIZED_DATA_DIR) + std::string("
 std::string bookLengthsLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/book_lengths.txt");
 std::string tableWidthLocation = std::string(SERIALIZED_DATA_DIR) + std::string("/table_width.txt");
 
-void search(Trie* vocabTrie) {
+void search(Trie *vocabTrie)
+{
     std::string query;
 
     std::cout << "Please enter a search term. It can be multiple words "
@@ -40,13 +41,14 @@ void search(Trie* vocabTrie) {
         bookLengthsLocation,
         tableWidthLocation);
 
-    ArrayList<Result*>* results = search.search(searchArgs, K);
+    ArrayList<Result *> *results = search.search(searchArgs, K);
 
     assert(results->length == K);
 
     std::cout << "Rank\tName\t(tf-idf score)\tPath" << std::endl;
 
-    for (int i = 0; i < results->length; i++) {
+    for (int i = 0; i < results->length; i++)
+    {
         std::cout
             << i + 1 << ":\t"
             << StringUtils::parseDocNameFromPath(results->get(i)->name) << "\t\t"
@@ -56,21 +58,35 @@ void search(Trie* vocabTrie) {
     }
 }
 
-int main() {
+int main()
+{
     Index index(GUTENBERG_DATA_DIR);
-    if (DEBUG) std::cout << "INDEX CREATED" << std::endl;
+    if (DEBUG)
+        std::cout << "INDEX CREATED" << std::endl;
     index.index();
-    if (DEBUG) std::cout << "INDEX INDEXED" << std::endl;
+    if (DEBUG)
+        std::cout << "INDEX INDEXED" << std::endl;
     index.persist(
         frequenciesTableLocation,
         vocabTrieLocation,
         bookPathsLocation,
         bookLengthsLocation,
         tableWidthLocation);
-    if (DEBUG) std::cout << "INDEX PERSISTED" << std::endl;
+    if (DEBUG)
+        std::cout << "INDEX PERSISTED" << std::endl;
     Autocomplete autocomplete(index.counter->getVocabTrie());
-    if (DEBUG) std::cout << "AUTOCOMPLETE CREATED" << std::endl;
+    if (DEBUG)
+        std::cout << "AUTOCOMPLETE CREATED" << std::endl;
     autocomplete.start();
-    if (DEBUG) std::cout << "AUTOCOMPLETE STARTED" << std::endl;
+    if (DEBUG)
+        std::cout << "AUTOCOMPLETE STARTED" << std::endl;
+    // search(index.counter->getVocabTrie());
+    // int numOfWords = 0;
+    // Trie *trie = new Trie(&numOfWords);
+    // trie->loadFrom("/Users/conor/ISE/Data Structures & Algorithms III/project/goggle/data/serialized_data/vocab_trie.bin");
+    // std::cout << trie->check("the")->wordIndex << std::endl;
+    // std::cout << trie->check("project")->wordIndex << std::endl;
+    // std::cout << trie->check("use")->wordIndex << std::endl;
+    // search(trie);
     search(index.counter->getVocabTrie());
 };

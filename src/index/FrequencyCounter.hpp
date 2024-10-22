@@ -6,40 +6,47 @@
 #include "StringUtils.hpp"
 #include "Book.hpp"
 
-
 class FrequencyCounter
 {
 public:
     int numOfDocuments;
-    Book* documents;
+    int numOfWords;
+    Book *documents;
 
-    FrequencyCounter(int numOfDocs) {
+    FrequencyCounter(int numOfDocs)
+    {
         numOfDocuments = numOfDocs;
-        vocabularyTrie = new Trie();
+        numOfWords = 0;
+        vocabularyTrie = new Trie(&numOfWords);
         documents = new Book[numOfDocs];
         frequencyTable = new ArrayList<int>[numOfDocs];
     }
 
-    ~FrequencyCounter() {
+    ~FrequencyCounter()
+    {
         delete vocabularyTrie;
         delete[] frequencyTable;
         delete[] documents;
     }
 
-    void addDocument(int docNum, ArrayList<std::string>* words, std::string path) {
+    void addDocument(int docNum, ArrayList<std::string> *words, std::string path)
+    {
         documents[docNum].path = path;
         documents[docNum].name = StringUtils::parseDocNameFromPath(path);
         documents[docNum].contents = words;
     }
 
-
-    void indexDocument(int docNum) {
-        for(int i = 0; i < documents[docNum].contents->length; i++) {
+    void indexDocument(int docNum)
+    {
+        for (int i = 0; i < documents[docNum].contents->length; i++)
+        {
             int index = vocabularyTrie->insert(documents[docNum].contents->get(i));
-            if (index == -1) {
+            if (index == -1)
+            {
                 continue;
             }
-            while (index >= frequencyTable[docNum].length) {
+            while (index >= frequencyTable[docNum].length)
+            {
                 frequencyTable[docNum].append(0);
             }
             int frequency = frequencyTable[docNum].get(index);
@@ -47,12 +54,12 @@ public:
         }
     }
 
-    Trie* getVocabTrie() {return vocabularyTrie;}
+    Trie *getVocabTrie() { return vocabularyTrie; }
 
-    ArrayList<int>* getFreqTable() {return frequencyTable;}
+    ArrayList<int> *getFreqTable() { return frequencyTable; }
 
 private:
-    Trie* vocabularyTrie;
-    ArrayList<int>* frequencyTable;
+    Trie *vocabularyTrie;
+    ArrayList<int> *frequencyTable;
 };
 #endif
