@@ -21,8 +21,7 @@ private:
     int tablewidth;
 
 public:
-    Trie *vocabTrie;
-    // FIXME: This only works within the same process at the moment
+    Trie* vocabTrie;
     Search(std::string frequency_table_location,
            std::string vocab_trie_location,
            std::string book_paths_location,
@@ -55,40 +54,7 @@ public:
         lengths_in.close();
     }
 
-    Search(std::string frequency_table_location,
-           Trie *vocab_trie,
-           std::string book_paths_location,
-           std::string book_lengths_location,
-           std::string table_width_location) : frequency_table_location(frequency_table_location),
-                                               vocabTrie(vocab_trie),
-                                               file_paths(new ArrayList<std::string>),
-                                               file_lengths(new ArrayList<int>)
-    {
-        std::ifstream paths_in(book_paths_location);
-        std::string path;
-        while (paths_in >> path)
-        {
-            file_paths->append(path);
-        }
-        paths_in.close();
-
-        std::ifstream table_width_file(table_width_location);
-        std::string table_width_str;
-        table_width_file >> table_width_str;
-        tablewidth = std::stoi(table_width_str);
-
-        std::ifstream lengths_in(book_lengths_location);
-        std::string length;
-        while (lengths_in >> length)
-        {
-            file_lengths->append(std::stoi(length));
-        }
-        lengths_in.close();
-    }
-
-    // FIXME: put in negation logic here
-    ArrayList<Result *> *search(ArrayList<Argument> searchArgs, int k)
-    {
+    ArrayList<Result*>* search(ArrayList<Argument> searchArgs, int k) {
 
         std::cout << "ARGUMENTS: " << std::endl;
 

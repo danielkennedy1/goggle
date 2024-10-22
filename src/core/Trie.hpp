@@ -205,13 +205,12 @@ public:
     }
     file.close();
     std::cout << "Trie serialized successfully." << std::endl;
-
     return;
   }
 
   void loadFrom(std::string filePath)
   {
-    std::ifstream file(filePath, std::ios::binary);
+    std::ifstream file(filePath);
     if (!file.is_open())
     {
       std::cerr
@@ -240,7 +239,6 @@ public:
     file.close();
 
     std::cout << "Trie deserialized successfully." << std::endl;
-
     return;
   }
 
