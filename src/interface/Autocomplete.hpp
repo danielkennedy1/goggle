@@ -6,7 +6,7 @@
 class Autocomplete {
 
     public:
-        Autocomplete(TrieNode* vocabTrie) : vocabTrie(vocabTrie) {};
+        Autocomplete(Trie* vocabTrie) : vocabTrie(vocabTrie) {};
 
         void start() {
             initscr();
@@ -71,6 +71,5 @@ class Autocomplete {
             endwin();
         };
 
-
-    TrieNode* vocabTrie;
+    Trie* vocabTrie;
 };
